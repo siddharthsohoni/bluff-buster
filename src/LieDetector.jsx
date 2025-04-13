@@ -5,21 +5,22 @@ import {
   historyQuestions,
   geographyQuestions,
 } from "./questions"; // Import category-specific questions
-import banner from './assets/banner.jpg';
+import banner from './assets/banner.jpg'; // Import banner image
 
 export default function LieDetectorGame() {
-  const [questions, setQuestions] = useState([]);
-  const [current, setCurrent] = useState(0);
-  const [selected, setSelected] = useState(null);
-  const [showResult, setShowResult] = useState(false);
-  const [score, setScore] = useState({ correct: 0, wrong: 0 });
-  const [timer, setTimer] = useState(60); // 1-minute timer
-  const [isGameActive, setIsGameActive] = useState(false);
-  const [playerAnswers, setPlayerAnswers] = useState([]); // Track player answers
-  const [selectedCategory, setSelectedCategory] = useState(null); // Track the selected category
-  const [countdown, setCountdown] = useState(null); // Track the countdown phase
+  // State variables to manage game data and UI
+  const [questions, setQuestions] = useState([]); // Stores the shuffled questions
+  const [current, setCurrent] = useState(0); // Tracks the current question index
+  const [selected, setSelected] = useState(null); // Tracks the selected answer
+  const [showResult, setShowResult] = useState(false); // Whether to show the result of the current question
+  const [score, setScore] = useState({ correct: 0, wrong: 0 }); // Tracks the player's score
+  const [timer, setTimer] = useState(60); // Timer for the game (1 minute)
+  const [isGameActive, setIsGameActive] = useState(false); // Whether the game is currently active
+  const [playerAnswers, setPlayerAnswers] = useState([]); // Tracks the player's answers
+  const [selectedCategory, setSelectedCategory] = useState(null); // Tracks the selected category
+  const [countdown, setCountdown] = useState(null); // Countdown before the game starts
 
-  // Shuffle questions and reset game state when the game starts
+  // Function to start the game
   const handleStart = () => {
     if (!selectedCategory) return; // Ensure a category is selected
 
@@ -43,46 +44,46 @@ export default function LieDetectorGame() {
         selectedQuestions = [];
     }
 
-    // Shuffle the selected questions
+    // Shuffle the selected questions randomly
     const shuffledQuestions = [...selectedQuestions].sort(
       () => Math.random() - 0.5
     );
 
     // Set the countdown phase
-    setCountdown(3); // Start countdown from 3
+    setCountdown(3); // Start countdown from 3 seconds
     setQuestions(shuffledQuestions);
 
     // Start the countdown timer
     const countdownInterval = setInterval(() => {
       setCountdown((prev) => {
         if (prev === 1) {
-          clearInterval(countdownInterval);
+          clearInterval(countdownInterval); // Stop the countdown
           setCountdown(null); // End countdown
           setIsGameActive(true); // Start the game
-          setTimer(60); // Reset the timer
-          setScore({ correct: 0, wrong: 0 });
-          setCurrent(0);
-          setSelected(null);
-          setShowResult(false);
-          setPlayerAnswers([]); // Reset player answers
+          setTimer(60); // Reset the timer to 60 seconds
+          setScore({ correct: 0, wrong: 0 }); // Reset the score
+          setCurrent(0); // Reset the current question index
+          setSelected(null); // Clear the selected answer
+          setShowResult(false); // Hide the result
+          setPlayerAnswers([]); // Clear player answers
         }
-        return prev - 1;
+        return prev - 1; // Decrement the countdown
       });
-    }, 1000);
+    }, 1000); // Countdown interval of 1 second
   };
 
-  // Timer logic
+  // Timer logic to count down during the game
   useEffect(() => {
     let interval;
     if (isGameActive && timer > 0) {
       interval = setInterval(() => {
-        setTimer((prev) => prev - 1);
+        setTimer((prev) => prev - 1); // Decrement the timer
       }, 1000);
     } else if (timer === 0) {
       setIsGameActive(false); // End the game when the timer reaches 0
 
       // Save game data to localStorage
-      const userTitle = getUserTitle(score);
+      const userTitle = getUserTitle(score); // Determine the user's title
       localStorage.setItem(
         "gameData",
         JSON.stringify({
@@ -92,32 +93,34 @@ export default function LieDetectorGame() {
         })
       );
     }
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); // Cleanup the interval
   }, [isGameActive, timer, score, playerAnswers]);
 
+  // Load saved game data from localStorage on component mount
   useEffect(() => {
     const savedGameData = localStorage.getItem("gameData");
     if (savedGameData) {
       const { score, playerAnswers, userTitle } = JSON.parse(savedGameData);
-      setScore(score);
-      setPlayerAnswers(playerAnswers);
+      setScore(score); // Restore the score
+      setPlayerAnswers(playerAnswers); // Restore player answers
       setIsGameActive(false); // Ensure the game is not active
       setTimer(0); // Ensure the timer is 0 to show the Game Over page
     }
   }, []);
 
-  // Handle answer selection
+  // Handle answer selection by the player
   const handleSelect = (index) => {
-    if (showResult || !isGameActive) return;
-    setSelected(index);
-    setShowResult(true);
+    if (showResult || !isGameActive) return; // Prevent selection if the result is shown or the game is inactive
+    setSelected(index); // Set the selected answer
+    setShowResult(true); // Show the result
 
-    // Track player's answer
+    // Track the player's answer
     setPlayerAnswers((prev) => [
       ...prev,
       { question: questions[current], selected: index },
     ]);
 
+    // Update the score based on whether the answer is correct
     if (index === questions[current].answer) {
       setScore((prev) => ({ ...prev, correct: prev.correct + 1 }));
     } else {
@@ -127,33 +130,20 @@ export default function LieDetectorGame() {
     // Automatically move to the next question after 500ms
     setTimeout(() => {
       if (current + 1 < questions.length) {
-        setCurrent((prev) => prev + 1);
+        setCurrent((prev) => prev + 1); // Move to the next question
         setSelected(null); // Reset the selected state
-        setShowResult(false);
+        setShowResult(false); // Hide the result
       } else {
         setIsGameActive(false); // End the game if no more questions are left
       }
     }, 500);
   };
 
-  // Share score on social media
+  // Share the player's score on social media
   const handleShareScore = () => {
-    // Determine the user's title based on their score
-    const getUserTitle = (score) => {
-      if (score.correct > 15) {
-        return "Truth Master";
-      } else if (score.correct >= 11 && score.correct <= 15) {
-        return "Suspiciously Smart";
-      } else if (score.correct >= 6 && score.correct <= 10) {
-        return "Kind of Gullible";
-      } else {
-        return "Certified Liar Detector Malfunction";
-      }
-    };
+    const userTitle = getUserTitle(score); // Determine the user's title
 
-    const userTitle = getUserTitle(score);
-
-    // Share text with the user's title
+    // Create the share text
     const shareText = `I scored ${score.correct} correct answers in Bluff Buster and earned the title "${userTitle}"! Can you beat my score? Play here: https://siddharthsohoni.github.io/bluff-buster`;
     const encodedText = encodeURIComponent(shareText);
 
@@ -170,8 +160,21 @@ export default function LieDetectorGame() {
     window.open(isMobile ? whatsappAppUrl : whatsappWebUrl, "_blank");
   };
 
+  // Determine the user's title based on their score
+  const getUserTitle = (score) => {
+    if (score.correct === 0) {
+      return "Certified Liar Detector Malfunction"; // No correct answers
+    } else if (score.correct > score.wrong) {
+      return "Suspiciously Smart"; // More correct than wrong
+    } else if (score.correct === questions.length) {
+      return "Truth Master"; // All answers correct
+    } else {
+      return "Kind of Gullible"; // More wrong than correct
+    }
+  };
+
+  // Render the countdown screen
   if (countdown !== null) {
-    // Show the countdown timer
     return (
       <div className="min-h-screen bg-white flex flex-col justify-center items-center p-4 text-center">
         <h1 className="text-6xl font-bold">{countdown}</h1>
@@ -180,121 +183,69 @@ export default function LieDetectorGame() {
     );
   }
 
+  // Render the game over screen
   if (!isGameActive && timer === 0) {
-    // Function to determine the user's title
-    const getUserTitle = (score) => {
-      if (score.correct > 15) {
-        return "Truth Master";
-      } else if (score.correct >= 11 && score.correct <= 15) {
-        return "Suspiciously Smart";
-      } else if (score.correct >= 6 && score.correct <= 10) {
-        return "Kind of Gullible";
-      } else {
-        return "Certified Liar Detector Malfunction";
-      }
-    };
-
-    const userTitle = getUserTitle(score);
+    const userTitle = getUserTitle(score); // Determine the user's title
 
     return (
       <div className="h-full bg-white flex flex-col items-center p-4 text-center">
-        {/* Sticky Header */}
-        <div className="sticky top-0 bg-white w-full max-w-2xl z-10 p-4">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-4">Game Over!</h1>
-          <p className="text-lg font-semibold mb-4">
-            You scored {score.correct} correct and {score.wrong} wrong answers.
-          </p>
-          <p className="text-lg font-semibold mb-4">
-            Your Title: <span className="text-blue-600">{userTitle}</span>
-          </p>
-          <div className="flex justify-center gap-4">
-            {/* Play Again Button */}
-            <button
-              className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
-              onClick={() => {
-                localStorage.removeItem("gameData"); // Clear saved game data
-                setIsGameActive(false); // Go back to the start page
-                setSelectedCategory(null); // Clear the selected category
-                setQuestions([]); // Clear questions
-                setScore({ correct: 0, wrong: 0 }); // Reset score
-                setTimer(60); // Reset timer
-                setCurrent(0); // Reset current question index
-                setSelected(null); // Clear selected answer
-                setShowResult(false); // Hide result
-                setPlayerAnswers([]); // Clear player answers
-              }}
-            >
-              Play Again
-            </button>
-            {/* Share Score Button */}
-            <button
-              onClick={handleShareScore}
-              className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
-            >
-              Share Score
-            </button>
-          </div>
-        </div>
-
-        {/* Scrollable Content */}
-        <div className="overflow-y-auto max-h-[calc(100vh-200px)] w-full max-w-2xl p-4 rounded-lg">
-          <h2 className="text-xl font-bold mb-4">Summary</h2>
-          {playerAnswers.map((entry, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-lg shadow-md p-4 border border-gray-300 gap-4 mb-4 text-left"
-            >
-              <h3 className="text-lg font-semibold mb-2 text-center">
-                Question {index + 1}
-              </h3>
-              <ul className="list-disc list-inside mb-4">
-                {entry.question.statements.map((statement, i) => (
-                  <li key={i}>{statement}</li>
-                ))}
-              </ul>
-              <p className="text-sm">
-                <span className="font-semibold">Correct Answer:</span>{" "}
-                <span className="text-green-600">
-                  {entry.question.statements[entry.question.answer]}
-                </span>
-              </p>
-              <p className="text-sm">
-                <span className="font-semibold">Your Answer:</span>{" "}
-                <span
-                  className={
-                    entry.selected === entry.question.answer
-                      ? "text-green-600"
-                      : "text-red-600"
-                  }
-                >
-                  {entry.question.statements[entry.selected] || "No Answer"}
-                </span>
-              </p>
-            </div>
-          ))}
+        {/* Game Over Header */}
+        <h1 className="text-2xl sm:text-3xl font-bold mb-4">Game Over!</h1>
+        <p className="text-lg font-semibold mb-4">
+          You scored {score.correct} correct and {score.wrong} wrong answers.
+        </p>
+        <p className="text-lg font-semibold mb-4">
+          Your Title: <span className="text-blue-600">{userTitle}</span>
+        </p>
+        {/* Buttons for replaying or sharing the score */}
+        <div className="flex justify-center gap-4">
+          <button
+            className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
+            onClick={() => {
+              localStorage.removeItem("gameData"); // Clear saved game data
+              setIsGameActive(false); // Reset the game state
+              setSelectedCategory(null); // Clear the selected category
+              setQuestions([]); // Clear questions
+              setScore({ correct: 0, wrong: 0 }); // Reset score
+              setTimer(60); // Reset timer
+              setCurrent(0); // Reset current question index
+              setSelected(null); // Clear selected answer
+              setShowResult(false); // Hide result
+              setPlayerAnswers([]); // Clear player answers
+            }}
+          >
+            Play Again
+          </button>
+          <button
+            onClick={handleShareScore}
+            className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
+          >
+            Share Score
+          </button>
         </div>
       </div>
     );
   }
 
+  // Render the start screen
   if (!isGameActive) {
-    // Start Screen
     const categories = ["Science", "Pop Culture", "History", "Geography"]; // Categories from questions.js
 
     return (
       <div className="min-h-screen bg-white flex flex-col justify-center items-center p-4 text-center">
-        {/* Responsive Image */}
+        {/* Banner Image */}
         <img
-          src={banner} // Add the base path
+          src={banner}
           alt="Bluff Buster"
-          className="w-40 sm:w-60 lg:w-80 mb-6" // Responsive width for mobile, tablet, and laptop
+          className="w-40 sm:w-60 lg:w-80 mb-6"
         />
         <p className="text-lg mb-4">Select a category to start the game:</p>
+        {/* Category Buttons */}
         <div className="grid grid-cols-2 gap-4 mb-6">
           {categories.map((category) => (
             <button
               key={category}
-              onClick={() => setSelectedCategory(category)} // Set the selected category
+              onClick={() => setSelectedCategory(category)}
               className={`w-40 h-16 font-bold rounded-lg transition-all ${
                 selectedCategory === category
                   ? "bg-gray-300 text-black"
@@ -305,9 +256,10 @@ export default function LieDetectorGame() {
             </button>
           ))}
         </div>
+        {/* Start Game Button */}
         <button
           onClick={handleStart}
-          disabled={!selectedCategory} // Disable if no category is selected
+          disabled={!selectedCategory}
           className={`px-6 py-3 rounded-lg font-bold text-white transition-all ${
             selectedCategory
               ? "bg-green-600 hover:bg-green-700"
@@ -320,17 +272,14 @@ export default function LieDetectorGame() {
     );
   }
 
+  // Render the game screen
   const { statements } = questions[current];
 
   return (
     <div className="min-h-screen bg-white flex flex-col justify-center items-center p-4 text-center">
-      {/* Responsive Image */}
-      <img
-        src={banner} // Add the base path
-        alt="Bluff Buster"
-        className="w-40 sm:w-60 lg:w-80 mb-6" // Responsive width for mobile, tablet, and laptop
-      />
+      {/* Timer */}
       <div className="text-2xl font-semibold mb-4">Time Left: {timer}s</div>
+      {/* Question and Answer Buttons */}
       <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md text-xl">
         {statements.map((s, i) => (
           <button
@@ -338,7 +287,7 @@ export default function LieDetectorGame() {
             onClick={() => handleSelect(i)}
             className={`block w-full text-center p-4 sm:p-5 mb-4 rounded-lg border transition-all duration-300 ${
               selected === i
-                ? "border-gray-500 bg-gray-200 shadow-inner" // Pressed button effect
+                ? "border-gray-500 bg-gray-200 shadow-inner"
                 : "border-gray-300 bg-gray-100 hover:bg-gray-200"
             }`}
           >
@@ -346,45 +295,6 @@ export default function LieDetectorGame() {
           </button>
         ))}
       </div>
-      {/* Conditionally Render Buttons */}
-      {!isGameActive && timer === 0 ? (
-        // Show "Play Again" button after the game ends
-        <button
-          className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
-          onClick={() => {
-            localStorage.removeItem("gameData"); // Clear saved game data
-            setIsGameActive(false); // Go back to the start page
-            setSelectedCategory(null); // Clear the selected category
-            setQuestions([]); // Clear questions
-            setScore({ correct: 0, wrong: 0 }); // Reset score
-            setTimer(60); // Reset timer
-            setCurrent(0); // Reset current question index
-            setSelected(null); // Clear selected answer
-            setShowResult(false); // Hide result
-            setPlayerAnswers([]); // Clear player answers
-          }}
-        >
-          Play Again
-        </button>
-      ) : (
-        // Show "Restart Game" button during the game
-        <button
-          onClick={() => {
-            setIsGameActive(false); // Go back to the start page
-            setSelectedCategory(null); // Clear the selected category
-            setQuestions([]); // Clear questions
-            setScore({ correct: 0, wrong: 0 }); // Reset score
-            setTimer(60); // Reset timer
-            setCurrent(0); // Reset current question index
-            setSelected(null); // Clear selected answer
-            setShowResult(false); // Hide result
-            setPlayerAnswers([]); // Clear player answers
-          }}
-          className="mt-6 px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
-        >
-          Restart Game
-        </button>
-      )}
     </div>
   );
 }
