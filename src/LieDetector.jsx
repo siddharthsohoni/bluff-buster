@@ -106,7 +106,7 @@ export default function LieDetectorGame() {
     setTimeout(() => {
       if (current + 1 < questions.length) {
         setCurrent((prev) => prev + 1);
-        setSelected(null);
+        setSelected(null); // Reset the selected state
         setShowResult(false);
       } else {
         setIsGameActive(false); // End the game if no more questions are left
