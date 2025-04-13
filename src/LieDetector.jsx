@@ -80,9 +80,31 @@ export default function LieDetectorGame() {
       }, 1000);
     } else if (timer === 0) {
       setIsGameActive(false); // End the game when the timer reaches 0
+
+      // Save game data to localStorage
+      const userTitle = getUserTitle(score);
+      localStorage.setItem(
+        "gameData",
+        JSON.stringify({
+          score,
+          playerAnswers,
+          userTitle,
+        })
+      );
     }
     return () => clearInterval(interval);
-  }, [isGameActive, timer]);
+  }, [isGameActive, timer, score, playerAnswers]);
+
+  useEffect(() => {
+    const savedGameData = localStorage.getItem("gameData");
+    if (savedGameData) {
+      const { score, playerAnswers, userTitle } = JSON.parse(savedGameData);
+      setScore(score);
+      setPlayerAnswers(playerAnswers);
+      setIsGameActive(false); // Ensure the game is not active
+      setTimer(0); // Ensure the timer is 0 to show the Game Over page
+    }
+  }, []);
 
   // Handle answer selection
   const handleSelect = (index) => {
@@ -190,6 +212,7 @@ export default function LieDetectorGame() {
             <button
               className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
               onClick={() => {
+                localStorage.removeItem("gameData"); // Clear saved game data
                 setIsGameActive(false); // Go back to the start page
                 setSelectedCategory(null); // Clear the selected category
                 setQuestions([]); // Clear questions
@@ -329,6 +352,7 @@ export default function LieDetectorGame() {
         <button
           className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
           onClick={() => {
+            localStorage.removeItem("gameData"); // Clear saved game data
             setIsGameActive(false); // Go back to the start page
             setSelectedCategory(null); // Clear the selected category
             setQuestions([]); // Clear questions
