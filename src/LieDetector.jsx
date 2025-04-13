@@ -154,7 +154,7 @@ export default function LieDetectorGame() {
     const userTitle = getUserTitle(score);
 
     // Share text with the user's title
-    const shareText = `I scored ${score.correct} correct answers in the Lie Detector Game and earned the title "${userTitle}"! Can you beat my score? Play here: https://siddharthsohoni.github.io/lie-detective`;
+    const shareText = `I scored ${score.correct} correct answers in Bluff Buster and earned the title "${userTitle}"! Can you beat my score? Play here: https://siddharthsohoni.github.io/bluff-buster`;
     const encodedText = encodeURIComponent(shareText);
 
     // WhatsApp Web URL
