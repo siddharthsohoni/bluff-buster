@@ -5,6 +5,7 @@ import {
   historyQuestions,
   geographyQuestions,
 } from "./questions"; // Import category-specific questions
+import banner from './assets/banner.jpg';
 
 export default function LieDetectorGame() {
   const [questions, setQuestions] = useState([]);
@@ -115,7 +116,23 @@ export default function LieDetectorGame() {
 
   // Share score on social media
   const handleShareScore = () => {
-    const shareText = `I scored ${score.correct} correct answers in the Lie Detector Game! Can you beat my score?`;
+    // Determine the user's title based on their score
+    const getUserTitle = (score) => {
+      if (score.correct > 15) {
+        return "Truth Master";
+      } else if (score.correct >= 11 && score.correct <= 15) {
+        return "Suspiciously Smart";
+      } else if (score.correct >= 6 && score.correct <= 10) {
+        return "Kind of Gullible";
+      } else {
+        return "Certified Liar Detector Malfunction";
+      }
+    };
+
+    const userTitle = getUserTitle(score);
+
+    // Share text with the user's title
+    const shareText = `I scored ${score.correct} correct answers in the Lie Detector Game and earned the title "${userTitle}"! Can you beat my score? Play here: https://siddharthsohoni.github.io/lie-detective`;
     const encodedText = encodeURIComponent(shareText);
 
     // WhatsApp Web URL
@@ -142,6 +159,21 @@ export default function LieDetectorGame() {
   }
 
   if (!isGameActive && timer === 0) {
+    // Function to determine the user's title
+    const getUserTitle = (score) => {
+      if (score.correct > 15) {
+        return "Truth Master";
+      } else if (score.correct >= 11 && score.correct <= 15) {
+        return "Suspiciously Smart";
+      } else if (score.correct >= 6 && score.correct <= 10) {
+        return "Kind of Gullible";
+      } else {
+        return "Certified Liar Detector Malfunction";
+      }
+    };
+
+    const userTitle = getUserTitle(score);
+
     return (
       <div className="h-full bg-white flex flex-col items-center p-4 text-center">
         {/* Sticky Header */}
@@ -150,13 +182,28 @@ export default function LieDetectorGame() {
           <p className="text-lg font-semibold mb-4">
             You scored {score.correct} correct and {score.wrong} wrong answers.
           </p>
+          <p className="text-lg font-semibold mb-4">
+            Your Title: <span className="text-blue-600">{userTitle}</span>
+          </p>
           <div className="flex justify-center gap-4">
+            {/* Play Again Button */}
             <button
-              onClick={handleStart}
-              className="px-4 py-2 rounded-lg bg-gray-300 text-black hover:bg-gray-400"
+              className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
+              onClick={() => {
+                setIsGameActive(false); // Go back to the start page
+                setSelectedCategory(null); // Clear the selected category
+                setQuestions([]); // Clear questions
+                setScore({ correct: 0, wrong: 0 }); // Reset score
+                setTimer(60); // Reset timer
+                setCurrent(0); // Reset current question index
+                setSelected(null); // Clear selected answer
+                setShowResult(false); // Hide result
+                setPlayerAnswers([]); // Clear player answers
+              }}
             >
               Play Again
             </button>
+            {/* Share Score Button */}
             <button
               onClick={handleShareScore}
               className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
@@ -208,13 +255,14 @@ export default function LieDetectorGame() {
   }
 
   if (!isGameActive) {
+    // Start Screen
     const categories = ["Science", "Pop Culture", "History", "Geography"]; // Categories from questions.js
 
     return (
       <div className="min-h-screen bg-white flex flex-col justify-center items-center p-4 text-center">
         {/* Responsive Image */}
         <img
-          src="./src/assets/banner.jpg" // Replace with the actual path to your image
+          src={banner} // Add the base path
           alt="Bluff Buster"
           className="w-40 sm:w-60 lg:w-80 mb-6" // Responsive width for mobile, tablet, and laptop
         />
@@ -255,7 +303,7 @@ export default function LieDetectorGame() {
     <div className="min-h-screen bg-white flex flex-col justify-center items-center p-4 text-center">
       {/* Responsive Image */}
       <img
-        src="./src/assets/banner.jpg" // Replace with the actual path to your image
+        src={banner} // Add the base path
         alt="Bluff Buster"
         className="w-40 sm:w-60 lg:w-80 mb-6" // Responsive width for mobile, tablet, and laptop
       />
