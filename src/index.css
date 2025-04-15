@@ -4,18 +4,23 @@
 
 html,
 body {
-  @apply h-full; /* Ensure html and body take up the full height */
+  @apply h-full; /* Ensure full height */
   @apply overflow-auto; /* Allow scrolling if content overflows */
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
 }
 
-
 body {
-  font-family: 'Roboto', sans-serif;
-  @apply flex items-center justify-center; /* Center content */
+  /* font-family: 'Shadows Into Light Two', sans-serif; */
+  font-family: 'Patrick Hand', sans-serif;
+  /* font-size: 20px; Set base font size */
+  font-optical-sizing: auto;
+  @apply flex flex-col items-center; /* Align content to the top */
 }
 
 #root {
   @apply w-full max-w-md; /* Restrict the app width */
+  @apply flex flex-col; /* Ensure content flows from top to bottom */
 }
 
 
