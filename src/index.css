@@ -12,7 +12,7 @@ body {
 
 body {
   /* font-family: 'Shadows Into Light Two', sans-serif; */
-  font-family: 'Patrick Hand', sans-serif;
+  /* font-family: 'Patrick Hand', sans-serif; */
   /* font-size: 20px; Set base font size */
   font-optical-sizing: auto;
   @apply flex flex-col items-center; /* Align content to the top */
