@@ -7,7 +7,7 @@ export default function GameOverScreen({ streak = 0, selectedCategory = "Unknown
 
   const shareGame = (platform) => {
     const shareText = `🔥 I just scored a streak of ${streak} in the "${selectedCategory}" category and earned the title "${userTitle}"! 🏆 Think you can beat me? 😏 Play Lie Detective now and prove it! 👉 ${shareUrl}`;
-    const shareUrl = "https://your-game-link.com"; // Replace with your game's URL
+    const shareUrl = "https://siddharthsohoni.github.io/bluff-buster/"; // Replace with your game's URL
 
     switch (platform) {
       case "twitter":
