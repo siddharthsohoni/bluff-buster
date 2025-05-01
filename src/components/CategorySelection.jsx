@@ -8,7 +8,7 @@ export default function CategorySelection({ selectedCategory, setSelectedCategor
   return (
     <div className="h-auto sm:min-h-screen bg-white flex flex-col justify-center items-center p-4 text-center">
       {/* Banner Image */}
-      <img src={bannerImage} alt="Bluff Buster Banner" className="w-full max-w-xs mb-4" />
+      <img src={bannerImage} alt="Bluff Buster Banner" className="w-full max-w-xxs mb-4" />
       
       {/* How to Play Section */}
       <div className="bg-gray-100 p-4 rounded-lg shadow-md w-full max-w-md mb-6">

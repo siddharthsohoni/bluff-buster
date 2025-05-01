@@ -6,6 +6,9 @@ export default {
       fontFamily: {
         sans: ['Roboto', 'sans-serif'], // Set Roboto as the default sans font
       },
+      maxWidth: {
+        xxs: '16rem', // 256px
+      },
     },
   },
   plugins: [],

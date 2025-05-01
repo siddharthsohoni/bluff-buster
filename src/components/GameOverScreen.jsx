@@ -6,28 +6,35 @@ export default function GameOverScreen({ streak = 0, selectedCategory = "Unknown
   const userTitle = getUserTitle(streak);
 
   const shareGame = (platform) => {
-    const shareText = `🔥 I just scored a streak of ${streak} in the "${selectedCategory}" category and earned the title "${userTitle}"! 🏆 Think you can beat me? 😏 Play Lie Detective now and prove it! 👉 ${shareUrl}`;
     const shareUrl = "https://siddharthsohoni.github.io/bluff-buster/"; // Replace with your game's URL
+    const shareText = `🔥 I just scored a streak of ${streak} in the "${selectedCategory}" category and earned the title "${userTitle}"! 🏆 Think you can beat me? 😏 Play Bluff Buster now and prove it! 👉 ${shareUrl}`;
+    const encodedText = encodeURIComponent(shareText);
+
+    // Detect if the user is on a mobile device
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
     switch (platform) {
-      case "twitter":
-        window.open(
-          `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`,
-          "_blank"
-        );
-        break;
-      case "facebook":
-        window.open(
-          `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`,
-          "_blank"
-        );
-        break;
       case "whatsapp":
-        window.open(
-          `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`,
-          "_blank"
-        );
+        // WhatsApp URLs
+        const whatsappWebUrl = `https://wa.me/?text=${encodedText}`;
+        const whatsappAppUrl = `whatsapp://send?text=${encodedText}`;
+        window.open(isMobile ? whatsappAppUrl : whatsappWebUrl, "_blank");
         break;
+
+      case "twitter":
+        // Twitter URLs
+        const twitterWebUrl = `https://twitter.com/intent/tweet?text=${encodedText}`;
+        const twitterAppUrl = `twitter://post?message=${encodedText}`;
+        window.open(isMobile ? twitterAppUrl : twitterWebUrl, "_blank");
+        break;
+
+      case "facebook":
+        // Facebook URLs
+        const facebookWebUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodedText}`;
+        const facebookAppUrl = `fb://faceweb/f?href=${facebookWebUrl}`;
+        window.open(isMobile ? facebookAppUrl : facebookWebUrl, "_blank");
+        break;
+
       default:
         console.error("Unsupported platform:", platform);
     }
@@ -36,7 +43,7 @@ export default function GameOverScreen({ streak = 0, selectedCategory = "Unknown
   return (
     <div className="h-auto sm:min-h-screen bg-white flex flex-col justify-center items-center p-4 text-center">
       {/* Banner Image */}
-      <img src={bannerImage} alt="Bluff Buster Banner" className="w-full max-w-sm mb-4" />
+      <img src={bannerImage} alt="Bluff Buster Banner" className="w-full max-w-xxs mb-4" />
 
       <h1 className="text-2xl sm:text-3xl font-bold mb-4">Game Over!</h1>
       <p className="text-xl font-semibold mb-4">

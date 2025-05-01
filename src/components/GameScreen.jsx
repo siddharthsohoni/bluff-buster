@@ -111,10 +111,10 @@ export default function GameScreen({
 
   return (
     <div className="h-auto sm:min-h-screen bg-white flex flex-col justify-center items-center p-4 text-center">
-      {/* Banner Image */}
-      <img src={bannerImage} alt="Bluff Buster Banner" className="w-full max-w-sm mb-2" />
+      {/* Reduced Banner Image */}
+      <img src={bannerImage} alt="Bluff Buster Banner" className="w-full max-w-xxs mb-2" />
 
-      <h1 className="text-2xl sm:text-2xl font-bold mb-2 text-red-600">
+      <h1 className="text-3xl sm:text-2xl font-bold mb-2 text-red-600">
         Spot the Bluff!
       </h1>
       {/* Timer */}
