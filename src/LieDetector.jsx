@@ -10,7 +10,6 @@ export default function LieDetectorGame() {
   const [gameMode, setGameMode] = useState("singlePlayer");
   const [gamePhase, setGamePhase] = useState("start");
   const [selectedCategory, setSelectedCategory] = useState(null);
-  // const [isGameActive, setIsGameActive] = useState(false);
   const [streak, setStreak] = useState(0);
   const [current, setCurrent] = useState(0);
 

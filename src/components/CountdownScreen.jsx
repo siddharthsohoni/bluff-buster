@@ -30,7 +30,7 @@ export default function CountdownScreen({ gamePhase, setGamePhase }) {
 
   return (
     <div className="min-h-screen bg-white flex flex-col justify-center items-center p-4 text-center">
-      <h1 className="text-6xl font-bold">{countdown}</h1>
+      <h1 className="text-6xl font-bold text-red-600">{countdown}</h1>
       <p className="text-lg mt-4">Get ready!</p>
     </div>
   );
