@@ -7,6 +7,7 @@ import {
   checkScoreQualification,
 } from "../services/leaderboardService";
 import { getUserTitle } from "../data/titles";
+import { getFullUrl } from '../utils/basePath';
 
 export default function GameOver() {
   const navigate = useNavigate();
@@ -48,15 +49,8 @@ export default function GameOver() {
   const difficulty = getDifficultyName(timer);
 
   const shareGame = (platform) => {
-    // Use environment variable for base URL, fallback to current origin if not set
-    const baseUrl = import.meta.env.VITE_BASE_URL || window.location.origin;
-    const challengeUrl = `${baseUrl}bluff-buster/challenge?category=${encodeURIComponent(
-      category
-    )}&difficulty=${encodeURIComponent(
-      difficulty
-    )}&streak=${streak}&name=${encodeURIComponent(
-      leaderboardName || "A friend"
-    )}`;
+    const challengePath = `/challenge?category=${encodeURIComponent(category)}&difficulty=${encodeURIComponent(difficulty)}&streak=${streak}&name=${encodeURIComponent(leaderboardName || "A friend")}`;
+    const challengeUrl = getFullUrl(challengePath);
 
     const shareText = `🔥 I just scored a streak of ${streak} in the "${category}" category on ${difficulty} difficulty and earned the title "${userTitle}"! 🏆 Think you can beat me? 😏 Play Bluff Buster now and prove it! 👉 ${challengeUrl}`;
     const encodedText = encodeURIComponent(shareText);

@@ -15,7 +15,7 @@ import ThemeToggle from "./components/ThemeToggle";
 function App() {
   return (
     <ThemeProvider>
-      <Router basename="/bluff-buster">
+      <Router basename={process.env.NODE_ENV === 'production' ? '/bluff-buster' : ''}>
         <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
           <ThemeToggle />
           <Routes>
