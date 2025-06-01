@@ -1,12 +1,62 @@
-# React + Vite
+# Bluff Buster
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Bluff Buster is a fun, fast-paced web game where you try to spot the bluff among three statements! Challenge yourself, climb the leaderboard, and dare your friends to beat your streak.
 
-Currently, two official plugins are available:
+## Features
+- Multiple categories (Science, Pop Culture, History, Geography, Food & Culture, Animals)
+- Three difficulty levels (Easy, Medium, Hard)
+- Streak-based scoring and fun user titles
+- Leaderboard with score submission
+- Challenge friends with shareable links
+- Day/Night (Dark) mode toggle
+- Mobile-friendly and responsive design
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Getting Started
 
-## Expanding the ESLint configuration
+### Prerequisites
+- Node.js (v18 or higher recommended)
+- npm or yarn
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Installation
+```bash
+git clone https://github.com/siddharthsohoni/bluff-buster.git
+cd bluff-buster
+npm install
+```
+
+### Running Locally
+```bash
+npm run dev
+```
+Visit [http://localhost:5173/bluff-buster/](http://localhost:5173/bluff-buster/) in your browser.
+
+### Building for Production
+```bash
+npm run build
+```
+
+### Linting
+```bash
+npm run lint
+```
+
+## Dark Mode
+- Toggle day/night mode using the button in the top-right corner.
+- All screens and cards support dark mode.
+
+## Deployment
+- The app is configured for deployment to GitHub Pages or any static host under the `/bluff-buster/` subdirectory.
+- If deploying elsewhere, update the `base` in `vite.config.js` as needed.
+
+## Project Structure
+- `src/pages/` — Main app screens (Home, Difficulty, Category, Game, GameOver, etc.)
+- `src/data/` — Question and title data
+- `src/context/ThemeContext.jsx` — Dark mode context
+- `src/components/ThemeToggle.jsx` — Theme toggle button
+- `src/config/firebase.js` — Firebase config (if using leaderboard)
+
+## Contributing
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
+
+## License
+[MIT](LICENSE)

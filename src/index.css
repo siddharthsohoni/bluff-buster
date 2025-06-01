@@ -8,6 +8,7 @@ body {
   @apply overflow-auto; /* Allow scrolling if content overflows */
   margin: 0; /* Remove default margin */
   padding: 0; /* Remove default padding */
+  @apply bg-white dark:bg-gray-900 transition-colors duration-200;
 }
 
 body {
