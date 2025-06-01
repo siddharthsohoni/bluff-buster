@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import bannerImage from "../assets/banner.jpg";
-import { getLeaderboard, addScore, checkScoreQualification } from "../services/leaderboardService";
+import {
+  getLeaderboard,
+  addScore,
+  checkScoreQualification,
+} from "../services/leaderboardService";
 import { getUserTitle } from "../data/titles";
 
 export default function GameOver() {
@@ -16,18 +20,28 @@ export default function GameOver() {
   const [scoreQualifies, setScoreQualifies] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [error, setError] = useState(null);
-  
+
   // Get game data from location state
-  const { streak = 0, category = "Unknown Category", timer = 15, correctAnswer, explanation } = location.state || {};
+  const {
+    streak = 0,
+    category = "Unknown Category",
+    timer = 15,
+    correctAnswer,
+    explanation,
+  } = location.state || {};
   const userTitle = getUserTitle(streak, category);
 
   // Get difficulty name based on timer
   const getDifficultyName = (timer) => {
     switch (timer) {
-      case 20: return "Easy";
-      case 15: return "Medium";
-      case 10: return "Hard";
-      default: return "Medium";
+      case 20:
+        return "Easy";
+      case 15:
+        return "Medium";
+      case 10:
+        return "Hard";
+      default:
+        return "Medium";
     }
   };
 
@@ -36,8 +50,14 @@ export default function GameOver() {
   const shareGame = (platform) => {
     // Use environment variable for base URL, fallback to current origin if not set
     const baseUrl = import.meta.env.VITE_BASE_URL || window.location.origin;
-    const challengeUrl = `${baseUrl}bluff-buster/challenge?category=${encodeURIComponent(category)}&difficulty=${encodeURIComponent(difficulty)}&streak=${streak}&name=${encodeURIComponent(leaderboardName || 'A friend')}`;
-    
+    const challengeUrl = `${baseUrl}bluff-buster/challenge?category=${encodeURIComponent(
+      category
+    )}&difficulty=${encodeURIComponent(
+      difficulty
+    )}&streak=${streak}&name=${encodeURIComponent(
+      leaderboardName || "A friend"
+    )}`;
+
     const shareText = `🔥 I just scored a streak of ${streak} in the "${category}" category on ${difficulty} difficulty and earned the title "${userTitle}"! 🏆 Think you can beat me? 😏 Play Bluff Buster now and prove it! 👉 ${challengeUrl}`;
     const encodedText = encodeURIComponent(shareText);
 
@@ -72,14 +92,18 @@ export default function GameOver() {
     setIsLoading(true);
     setError(null);
     try {
-      console.log('Fetching leaderboard for:', { category, difficulty });
+      console.log("Fetching leaderboard for:", { category, difficulty });
       const leaderboard = await getLeaderboard(category, difficulty);
-      console.log('Received leaderboard data:', leaderboard);
+      console.log("Received leaderboard data:", leaderboard);
       setLeaderboardData(leaderboard);
-      
+
       // Check if score qualifies
-      const qualifies = await checkScoreQualification(streak, category, difficulty);
-      console.log('Score qualifies:', qualifies);
+      const qualifies = await checkScoreQualification(
+        streak,
+        category,
+        difficulty
+      );
+      console.log("Score qualifies:", qualifies);
       setScoreQualifies(qualifies);
     } catch (error) {
       console.error("Error checking leaderboard:", error);
@@ -104,9 +128,9 @@ export default function GameOver() {
         name: leaderboardName.trim(),
         streak,
         category,
-        difficulty
+        difficulty,
       });
-      
+
       setShowLeaderboardPopup(false);
       setHasSubmitted(true);
       // Refresh leaderboard after submission
@@ -122,60 +146,96 @@ export default function GameOver() {
   return (
     <div className="h-screen bg-white dark:bg-gray-900 flex flex-col items-center p-4 text-center transition-colors duration-200">
       {/* Banner Image */}
-      <img src={bannerImage} alt="Bluff Buster Banner" className="w-20 sm:w-24 mb-2" />
+      <img
+        src={bannerImage}
+        alt="Bluff Buster Banner"
+        className="w-20 sm:w-24 mb-2"
+      />
 
       <div className="w-full max-w-4xl">
         {/* Leaderboard Section */}
         <div className="mb-6">
           <div className="flex items-center justify-center gap-2 mb-1">
             <span className="text-xl">🏆</span>
-            <h2 className="text-2xl font-bold text-purple-800 dark:text-purple-400">Leaderboard</h2>
+            <h2 className="text-2xl font-bold text-purple-800 dark:text-purple-400">
+              Leaderboard
+            </h2>
             <span className="text-xl">🏆</span>
           </div>
           <div className="mb-2 text-sm text-gray-700 dark:text-gray-300 font-semibold text-center">
-            Category: <span className="text-purple-700 dark:text-purple-300">{category}</span> |
-            Difficulty: <span className="text-blue-700 dark:text-blue-300">{difficulty}</span>
+            Category:{" "}
+            <span className="text-purple-700 dark:text-purple-300">
+              {category}
+            </span>{" "}
+            | Difficulty:{" "}
+            <span className="text-blue-700 dark:text-blue-300">
+              {difficulty}
+            </span>
           </div>
           {leaderboardData.length === 0 ? (
             <div className="text-center">
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">No scores yet. Be the first! 🚀</p>
-              <button
-                className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold text-sm hover:from-purple-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                onClick={() => setShowLeaderboardPopup(true)}
-                disabled={hasSubmitted}
-              >
-                {hasSubmitted ? "Score Submitted" : "Add Your Score"}
-              </button>
+              {!isLoading && scoreQualifies && !hasSubmitted && streak > 0 && (
+                <>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                    No scores yet. Be the first! 🚀
+                  </p>
+                  <button
+                    className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold text-sm hover:from-purple-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    onClick={() => setShowLeaderboardPopup(true)}
+                    disabled={hasSubmitted}
+                  >
+                    Add Your Score
+                  </button>
+                </>
+              )}
+              {!isLoading && streak === 0 && (
+                <p className="mt-2 text-xs text-red-500">
+                  You need a streak greater than 0 to join the leaderboard.
+                </p>
+              )}
             </div>
           ) : (
             <>
               <div className="space-y-2">
                 {leaderboardData.map((entry, index) => (
-                  <div 
+                  <div
                     key={entry.id}
                     className="flex items-center justify-between px-4 p-2 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-lg"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-gray-600 dark:text-gray-300">#{index + 1}</span>
-                      <span className="font-semibold text-sm text-gray-800 dark:text-gray-200">{entry.name}</span>
+                      <span className="font-bold text-gray-600 dark:text-gray-300">
+                        #{index + 1}
+                      </span>
+                      <span className="font-semibold text-sm text-gray-800 dark:text-gray-200">
+                        {entry.name}
+                      </span>
                     </div>
                     <div className="text-right">
-                      <div className="font-bold text-red-600 dark:text-red-400">{entry.streak}</div>
+                      <div className="font-bold text-red-600 dark:text-red-400">
+                        {entry.streak}
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
-              {(scoreQualifies || leaderboardData.length < 5) && !hasSubmitted && (
-                <button
-                  className="mt-3 w-full px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold text-sm hover:from-purple-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                  onClick={() => setShowLeaderboardPopup(true)}
-                  disabled={hasSubmitted}
-                >
-                  {leaderboardData.length < 5 ? "Join the Leaderboard" : "Add Your Score"}
-                </button>
-              )}
+              {!isLoading &&
+                (scoreQualifies || leaderboardData.length < 5) &&
+                !hasSubmitted &&
+                streak > 0 && (
+                  <button
+                    className="mt-3 w-full px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold text-sm hover:from-purple-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    onClick={() => setShowLeaderboardPopup(true)}
+                    disabled={hasSubmitted}
+                  >
+                    {leaderboardData.length < 5
+                      ? "Join the Leaderboard"
+                      : "Add Your Score"}
+                  </button>
+                )}
               {hasSubmitted && (
-                <p className="mt-3 text-sm text-green-600 dark:text-green-400">Your score has been submitted! 🎉</p>
+                <p className="mt-3 text-sm text-green-600 dark:text-green-400">
+                  Your score has been submitted! 🎉
+                </p>
               )}
             </>
           )}
@@ -186,9 +246,13 @@ export default function GameOver() {
           <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-700 rounded-lg p-3 shadow-sm">
             {/* Streak Display */}
             <div className="text-center mb-3">
-              <p className="text-[10px] text-gray-500 dark:text-gray-400 mb-1">Game Streak</p>
+              <p className="text-[10px] text-gray-500 dark:text-gray-400 mb-1">
+                Game Streak
+              </p>
               <div className="inline-flex items-center gap-2">
-                <span className="text-3xl font-bold text-red-600 dark:text-red-400">{streak}</span>
+                <span className="text-3xl font-bold text-red-600 dark:text-red-400">
+                  {streak}
+                </span>
                 <span className="text-xl">🔥</span>
               </div>
             </div>
@@ -200,8 +264,12 @@ export default function GameOver() {
                 <div className="flex items-center justify-center mb-1">
                   <span className="text-lg">🎯</span>
                 </div>
-                <p className="text-[10px] text-gray-500 dark:text-gray-400 text-center">Category</p>
-                <p className="text-xs font-semibold text-center text-gray-800 dark:text-gray-200 truncate">{category}</p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 text-center">
+                  Category
+                </p>
+                <p className="text-xs font-semibold text-center text-gray-800 dark:text-gray-200 truncate">
+                  {category}
+                </p>
               </div>
 
               {/* Difficulty Card */}
@@ -209,8 +277,12 @@ export default function GameOver() {
                 <div className="flex items-center justify-center mb-1">
                   <span className="text-lg">⚡</span>
                 </div>
-                <p className="text-[10px] text-gray-500 dark:text-gray-400 text-center">Difficulty</p>
-                <p className="text-xs font-semibold text-center text-gray-800 dark:text-gray-200">{difficulty}</p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 text-center">
+                  Difficulty
+                </p>
+                <p className="text-xs font-semibold text-center text-gray-800 dark:text-gray-200">
+                  {difficulty}
+                </p>
               </div>
 
               {/* Title Card */}
@@ -218,8 +290,12 @@ export default function GameOver() {
                 <div className="flex items-center justify-center mb-1">
                   <span className="text-lg">👑</span>
                 </div>
-                <p className="text-[10px] text-gray-500 dark:text-gray-400 text-center">Title</p>
-                <p className="text-xs font-semibold text-center text-purple-600 dark:text-purple-400 truncate">{userTitle}</p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 text-center">
+                  Title
+                </p>
+                <p className="text-xs font-semibold text-center text-purple-600 dark:text-purple-400 truncate">
+                  {userTitle}
+                </p>
               </div>
             </div>
           </div>
@@ -227,7 +303,10 @@ export default function GameOver() {
 
         {/* Error message */}
         {error && (
-          <div className="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-200 px-3 py-2 rounded-lg mb-3 text-sm" role="alert">
+          <div
+            className="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-200 px-3 py-2 rounded-lg mb-3 text-sm"
+            role="alert"
+          >
             <span className="block sm:inline">{error}</span>
           </div>
         )}
@@ -237,13 +316,15 @@ export default function GameOver() {
           <div className="grid grid-cols-2 gap-2">
             <button
               className="px-4 py-2 rounded-lg bg-gradient-to-r from-green-500 to-green-600 text-white font-bold text-base hover:from-green-600 hover:to-green-700 transform hover:scale-105 transition-all duration-200 shadow"
-              onClick={() => navigate('/')}
+              onClick={() => navigate("/")}
             >
               New Game
             </button>
             <button
               className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold text-base hover:from-purple-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow"
-              onClick={() => navigate('/beat-streak', { state: { streak, category, timer } })}
+              onClick={() =>
+                navigate("/beat-streak", { state: { streak, category, timer } })
+              }
             >
               Beat the Streak
             </button>
@@ -261,22 +342,32 @@ export default function GameOver() {
       {showLeaderboard && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white rounded-xl p-4 w-80 max-h-[80vh] overflow-y-auto">
-            <h2 className="text-xl font-bold mb-3 text-purple-800">🏆 Top Scores</h2>
+            <h2 className="text-xl font-bold mb-3 text-purple-800">
+              🏆 Top Scores
+            </h2>
             {leaderboardData.length === 0 ? (
-              <p className="text-sm text-gray-500">No scores yet. Be the first! 🚀</p>
+              <p className="text-sm text-gray-500">
+                No scores yet. Be the first! 🚀
+              </p>
             ) : (
               <div className="space-y-2">
                 {leaderboardData.map((entry, index) => (
-                  <div 
+                  <div
                     key={entry.id}
                     className="flex items-center justify-between px-4 p-2 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-lg"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-gray-600 dark:text-gray-300">#{index + 1}</span>
-                      <span className="font-semibold text-sm text-gray-800 dark:text-gray-200">{entry.name}</span>
+                      <span className="font-bold text-gray-600 dark:text-gray-300">
+                        #{index + 1}
+                      </span>
+                      <span className="font-semibold text-sm text-gray-800 dark:text-gray-200">
+                        {entry.name}
+                      </span>
                     </div>
                     <div className="text-right">
-                      <div className="font-bold text-red-600 dark:text-red-400">{entry.streak}</div>
+                      <div className="font-bold text-red-600 dark:text-red-400">
+                        {entry.streak}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -298,8 +389,12 @@ export default function GameOver() {
       {showLeaderboardPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white rounded-xl p-4 w-80 text-center">
-            <h2 className="text-xl font-bold mb-2 text-purple-800">🎉 Congratulations!</h2>
-            <p className="text-sm mb-3">Your score qualifies for the leaderboard!</p>
+            <h2 className="text-xl font-bold mb-2 text-purple-800">
+              🎉 Congratulations!
+            </h2>
+            <p className="text-sm mb-3">
+              Your score qualifies for the leaderboard!
+            </p>
             <div className="mb-3">
               <input
                 type="text"
@@ -309,7 +404,9 @@ export default function GameOver() {
                 onChange={(e) => setLeaderboardName(e.target.value)}
                 maxLength={20}
               />
-              <p className="text-xs text-gray-500">Your name will be visible on the leaderboard</p>
+              <p className="text-xs text-gray-500">
+                Your name will be visible on the leaderboard
+              </p>
             </div>
             <div className="flex gap-2">
               <button
@@ -335,7 +432,9 @@ export default function GameOver() {
       {showPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white dark:bg-gray-900 rounded-xl p-4 w-80 text-center transition-colors duration-200">
-            <h2 className="text-xl font-bold mb-3 text-purple-800 dark:text-purple-300">Share with Friends</h2>
+            <h2 className="text-xl font-bold mb-3 text-purple-800 dark:text-purple-300">
+              Share with Friends
+            </h2>
             <div className="grid grid-cols-2 gap-2">
               <button
                 className="px-3 py-2 rounded-lg bg-gradient-to-r from-green-500 to-green-600 text-white font-bold text-sm hover:from-green-600 hover:to-green-700 transform hover:scale-105 transition-all duration-200 shadow"
@@ -361,4 +460,4 @@ export default function GameOver() {
       )}
     </div>
   );
-} 
+}
