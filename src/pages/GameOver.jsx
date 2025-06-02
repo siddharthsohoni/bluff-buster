@@ -15,7 +15,6 @@ export default function GameOver() {
   const [showPopup, setShowPopup] = useState(false);
   const [showLeaderboardPopup, setShowLeaderboardPopup] = useState(false);
   const [leaderboardName, setLeaderboardName] = useState("");
-  const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [scoreQualifies, setScoreQualifies] = useState(false);
@@ -148,92 +147,55 @@ export default function GameOver() {
       />
 
       <div className="w-full max-w-4xl">
-        {/* Leaderboard Section */}
-        <div className="mb-6">
-          <div className="flex items-center justify-center gap-2 mb-1">
-            <span className="text-xl">🏆</span>
-            <h2 className="text-2xl font-bold text-purple-800 dark:text-purple-400">
-              Leaderboard
-            </h2>
-            <span className="text-xl">🏆</span>
-          </div>
-          <div className="mb-2 text-sm text-gray-700 dark:text-gray-300 font-semibold text-center">
-            Category:{" "}
-            <span className="text-purple-700 dark:text-purple-300">
-              {category}
-            </span>{" "}
-            | Difficulty:{" "}
-            <span className="text-blue-700 dark:text-blue-300">
-              {difficulty}
-            </span>
-          </div>
-          {leaderboardData.length === 0 ? (
-            <div className="text-center">
-              {!isLoading && scoreQualifies && !hasSubmitted && streak > 0 && (
-                <>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
-                    No scores yet. Be the first! 🚀
-                  </p>
-                  <button
-                    className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold text-sm hover:from-purple-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                    onClick={() => setShowLeaderboardPopup(true)}
-                    disabled={hasSubmitted}
-                  >
-                    Add Your Score
-                  </button>
-                </>
-              )}
-              {!isLoading && streak === 0 && (
-                <p className="mt-2 text-xs text-red-500">
-                  You need a streak greater than 0 to join the leaderboard.
-                </p>
-              )}
+        {/* Leaderboard Section (mimics stats section) */}
+        <div className="mb-4">
+          <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-700 rounded-lg p-3 shadow-sm">
+            <div className="text-center mb-3">
+              <p className="text-[10px] text-gray-500 dark:text-gray-400 mb-1">Leaderboard</p>
+              <div className="inline-flex items-center gap-2">
+                <span className="text-xl">🏆</span>
+                <span className="text-lg font-bold text-purple-800 dark:text-purple-400">Top Scores</span>
+                <span className="text-xl">🏆</span>
+              </div>
+              <div className="text-xs text-gray-700 dark:text-gray-300 font-semibold text-center mt-1">
+                Category: <span className="text-purple-700 dark:text-purple-300">{category}</span> | Difficulty: <span className="text-blue-700 dark:text-blue-300">{difficulty}</span>
+              </div>
             </div>
-          ) : (
-            <>
-              <div className="space-y-2">
-                {leaderboardData.map((entry, index) => (
+            <div className="grid grid-cols-1 gap-2">
+              {leaderboardData.length === 0 ? (
+                <div className="bg-white dark:bg-gray-800 rounded-lg p-2 shadow-sm text-center text-sm text-gray-500 dark:text-gray-400 mb-3">
+                  No scores yet. Be the first! 🚀
+                </div>
+              ) : (
+                leaderboardData.map((entry, index) => (
                   <div
                     key={entry.id}
-                    className="flex items-center justify-between px-4 p-2 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-lg"
+                    className="bg-white dark:bg-gray-800 rounded-lg p-2 shadow-sm flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-gray-600 dark:text-gray-300">
-                        #{index + 1}
-                      </span>
-                      <span className="font-semibold text-sm text-gray-800 dark:text-gray-200">
-                        {entry.name}
-                      </span>
+                      <span className="font-bold text-gray-600 dark:text-gray-300">#{index + 1}</span>
+                      <span className="font-semibold text-sm text-gray-800 dark:text-gray-200">{entry.name}</span>
                     </div>
                     <div className="text-right">
-                      <div className="font-bold text-red-600 dark:text-red-400">
-                        {entry.streak}
-                      </div>
+                      <div className="font-bold text-red-600 dark:text-red-400">{entry.streak}</div>
                     </div>
                   </div>
-                ))}
-              </div>
-              {!isLoading &&
-                (scoreQualifies || leaderboardData.length < 5) &&
-                !hasSubmitted &&
-                streak > 0 && (
-                  <button
-                    className="mt-3 w-full px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold text-sm hover:from-purple-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                    onClick={() => setShowLeaderboardPopup(true)}
-                    disabled={hasSubmitted}
-                  >
-                    {leaderboardData.length < 5
-                      ? "Join the Leaderboard"
-                      : "Add Your Score"}
-                  </button>
-                )}
-              {hasSubmitted && (
-                <p className="mt-3 text-sm text-green-600 dark:text-green-400">
-                  Your score has been submitted! 🎉
-                </p>
+                ))
               )}
-            </>
-          )}
+            </div>
+            {!isLoading && (scoreQualifies || leaderboardData.length < 5) && !hasSubmitted && streak > 0 && (
+              <button
+                className="mt-3 w-full px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold text-sm hover:from-purple-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                onClick={() => setShowLeaderboardPopup(true)}
+                disabled={hasSubmitted}
+              >
+                Add to Leaderboard
+              </button>
+            )}
+            {hasSubmitted && (
+              <p className="mt-3 text-sm text-green-600 dark:text-green-400">Your score has been submitted! 🎉</p>
+            )}
+          </div>
         </div>
 
         {/* Game Stats Section */}
@@ -332,53 +294,6 @@ export default function GameOver() {
           </button>
         </div>
       </div>
-
-      {/* Leaderboard Display */}
-      {showLeaderboard && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white rounded-xl p-4 w-80 max-h-[80vh] overflow-y-auto">
-            <h2 className="text-xl font-bold mb-3 text-purple-800">
-              🏆 Top Scores
-            </h2>
-            {leaderboardData.length === 0 ? (
-              <p className="text-sm text-gray-500">
-                No scores yet. Be the first! 🚀
-              </p>
-            ) : (
-              <div className="space-y-2">
-                {leaderboardData.map((entry, index) => (
-                  <div
-                    key={entry.id}
-                    className="flex items-center justify-between px-4 p-2 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-lg"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-gray-600 dark:text-gray-300">
-                        #{index + 1}
-                      </span>
-                      <span className="font-semibold text-sm text-gray-800 dark:text-gray-200">
-                        {entry.name}
-                      </span>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-bold text-red-600 dark:text-red-400">
-                        {entry.streak}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-            <div className="mt-3 space-y-2">
-              <button
-                className="w-full px-3 py-2 rounded-lg bg-gradient-to-r from-gray-400 to-gray-500 text-white font-bold text-sm hover:from-gray-500 hover:to-gray-600 transform hover:scale-105 transition-all duration-200 shadow"
-                onClick={() => setShowLeaderboard(false)}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Leaderboard Submission Popup */}
       {showLeaderboardPopup && (

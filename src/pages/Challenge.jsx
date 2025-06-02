@@ -25,8 +25,7 @@ export default function Challenge() {
   };
 
   const handleStartGame = () => {
-    const basePath = getBasePath();
-    navigate(`${basePath}/category/${category.toLowerCase().replace(/\s+/g, '-')}`, {
+    navigate(`/category/${category.toLowerCase().replace(/\s+/g, '-')}`, {
       state: { timer: getTimerFromDifficulty(difficulty) }
     });
   };
