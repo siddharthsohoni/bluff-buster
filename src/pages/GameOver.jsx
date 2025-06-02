@@ -49,8 +49,9 @@ export default function GameOver() {
   const difficulty = getDifficultyName(timer);
 
   const shareGame = (platform) => {
-    const challengePath = `/#/challenge?category=${encodeURIComponent(category)}&difficulty=${encodeURIComponent(difficulty)}&streak=${streak}&name=${encodeURIComponent(leaderboardName || "A friend")}`;
-    const challengeUrl = getFullUrl(challengePath);
+    // Use getFullUrl to ensure the # is included in the challenge link for production
+    const challengePath = `/challenge?category=${encodeURIComponent(category)}&difficulty=${encodeURIComponent(difficulty)}&streak=${streak}&name=${encodeURIComponent(leaderboardName || "A friend")}`;
+    const challengeUrl = getFullUrl(challengePath); // This will include the # in production
 
     const shareText = `🔥 I just scored a streak of ${streak} in the "${category}" category on ${difficulty} difficulty and earned the title "${userTitle}"! 🏆 Think you can beat me? 😏 Play Bluff Buster now and prove it! 👉 ${challengeUrl}`;
     const encodedText = encodeURIComponent(shareText);
