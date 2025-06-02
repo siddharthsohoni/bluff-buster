@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import bannerImage from "../assets/banner.jpg";
 import { getUserTitle } from "../data/titles";
+import { getBasePath } from '../utils/basePath';
 
 export default function Challenge() {
   const navigate = useNavigate();
@@ -24,7 +25,8 @@ export default function Challenge() {
   };
 
   const handleStartGame = () => {
-    navigate(`/category/${category.toLowerCase().replace(/\s+/g, '-')}`, {
+    const basePath = getBasePath();
+    navigate(`${basePath}/category/${category.toLowerCase().replace(/\s+/g, '-')}`, {
       state: { timer: getTimerFromDifficulty(difficulty) }
     });
   };

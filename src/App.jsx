@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import DifficultySelection from "./pages/DifficultySelection";
 import CategorySelection from "./pages/CategorySelection";
@@ -15,7 +15,7 @@ import ThemeToggle from "./components/ThemeToggle";
 function App() {
   return (
     <ThemeProvider>
-      <Router basename={process.env.NODE_ENV === 'production' ? '/bluff-buster' : ''}>
+      <Router>
         <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
           <ThemeToggle />
           <Routes>
