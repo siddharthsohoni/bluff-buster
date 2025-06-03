@@ -39,8 +39,8 @@ export const getLeaderboard = async (category = null, difficulty = null) => {
       leaderboardRef,
       where('date', '>=', sevenDaysAgo),
       where('date', '<=', today),
-      orderBy('date', 'desc'),
-      orderBy('score', 'desc')
+      orderBy('score', 'desc'),
+      orderBy('date', 'desc')
     );
 
     if (category) {
