@@ -226,7 +226,7 @@ export default function CategoryGame() {
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md text-xl transition-colors duration-200">
         {statements.map((s, i) => (
           <button
-            key={`${current}-${i}-${Date.now()}`}
+            key={`${current}-${i}`}
             onClick={() => handleSelect(i)}
             disabled={selected !== null}
             className={`block w-full text-center p-4 sm:p-5 mb-2 rounded-lg border transition-all duration-300 ${
