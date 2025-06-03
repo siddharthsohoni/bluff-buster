@@ -12,7 +12,7 @@ export default function Challenge() {
   const difficulty = searchParams.get('difficulty');
   const streak = searchParams.get('streak');
   const challengerName = searchParams.get('name') || 'A friend';
-  const challengerTitle = getUserTitle(parseInt(streak));
+  const challengerTitle = getUserTitle(parseInt(streak), category);
   
   // Convert difficulty name to timer value
   const getTimerFromDifficulty = (difficulty) => {

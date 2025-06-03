@@ -19,10 +19,17 @@ export default function BeatStreak() {
   };
 
   const difficulty = getDifficultyName(timer);
-  const userTitle = getUserTitle(streak);
+  const userTitle = getUserTitle(streak, category);
 
   const handleStartGame = () => {
-    navigate(`/category/${category.toLowerCase().replace(/\s+/g, '-')}`, { 
+    // Split the category into main and subcategory
+    const [mainCategory, subcategory] = category.split(' - ');
+    
+    // Convert to lowercase and replace spaces with hyphens
+    const formatPath = (str) => str.toLowerCase().replace(/\s+/g, '-');
+    const categoryPath = `${formatPath(mainCategory)}/${formatPath(subcategory)}`;
+    
+    navigate(`/category/${categoryPath}`, { 
       state: { timer } 
     });
   };
