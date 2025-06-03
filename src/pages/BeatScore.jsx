@@ -1,12 +1,11 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import bannerImage from "../assets/banner.jpg";
-import { getUserTitle } from "../data/titles";
 
 export default function BeatScore() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { score, category, timer } = location.state || {};
+  const { score, category, timer, userTitle } = location.state || {};
 
   // Get difficulty name based on timer
   const getDifficultyName = (timer) => {
@@ -19,7 +18,6 @@ export default function BeatScore() {
   };
 
   const difficulty = getDifficultyName(timer);
-  const userTitle = getUserTitle(score, category);
 
   const handleStartGame = () => {
     // Split the category into main and subcategory

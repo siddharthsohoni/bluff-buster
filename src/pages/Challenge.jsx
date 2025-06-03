@@ -1,28 +1,17 @@
-import React, { useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import bannerImage from "../assets/banner.jpg";
-import { getUserTitle } from "../data/titles";
-import { getBasePath } from '../utils/basePath';
 
 export default function Challenge() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
   
-  const category = searchParams.get('category');
-  const difficulty = searchParams.get('difficulty');
-  const streak = searchParams.get('streak');
-  const challengerName = searchParams.get('name') || 'A friend';
-  const challengerTitle = getUserTitle(parseInt(streak), category);
-  
-  // Convert difficulty name to timer value
-  const getTimerFromDifficulty = (difficulty) => {
-    switch (difficulty?.toLowerCase()) {
-      case 'easy': return 20;
-      case 'medium': return 15;
-      case 'hard': return 10;
-      default: return 15;
-    }
-  };
+  const category = searchParams.get("category");
+  const difficulty = searchParams.get("difficulty");
+  const score = parseInt(searchParams.get("score"));
+  const name = searchParams.get("name");
+  const title = searchParams.get("title");
 
   const handleStartGame = () => {
     // Split the category into main and subcategory
@@ -32,67 +21,61 @@ export default function Challenge() {
     const formatPath = (str) => str.toLowerCase().replace(/\s+/g, '-');
     const categoryPath = `${formatPath(mainCategory)}/${formatPath(subcategory)}`;
     
-    navigate(`/category/${categoryPath}`, {
-      state: { timer: getTimerFromDifficulty(difficulty) }
+    navigate(`/category/${categoryPath}`, { 
+      state: { 
+        timer: difficulty === "Easy" ? 20 : difficulty === "Hard" ? 10 : 15,
+        challengeScore: score,
+        challengerName: name,
+        challengerTitle: title
+      } 
     });
   };
 
-  // If any required parameter is missing, redirect to home
-  if (!category || !difficulty || !streak) {
-    navigate('/');
-    return null;
-  }
-
   return (
-    <div className="h-auto sm:min-h-screen bg-white dark:bg-gray-900 flex flex-col justify-center items-center p-4 text-center transition-colors duration-200">
-      {/* Banner Image */}
-      <img src={bannerImage} alt="Bluff Buster Banner" className="w-24 sm:w-32 mb-4" />
+    <div className="h-screen bg-white dark:bg-gray-900 flex flex-col items-center justify-center p-4 text-center transition-colors duration-200">
+      <img src={bannerImage} alt="Bluff Buster Banner" className="w-20 sm:w-24 mb-2" />
       
-      <h1 className="text-2xl font-bold mb-6 text-red-600">Challenge Accepted!</h1>
-
-      {/* Challenge Message */}
-      <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-700 p-6 rounded-lg shadow-md w-full max-w-sm mb-6 transition-colors duration-200">
-        <p className="text-lg text-gray-800 dark:text-gray-100 mb-4">
-          <span className="font-bold text-purple-600">{challengerName}</span> 
-          <span className="text-gray-600 dark:text-gray-400"> (</span>
-          <span className="font-semibold text-purple-600">{challengerTitle}</span>
-          <span className="text-gray-600 dark:text-gray-400">) has challenged you to beat their streak of </span>
-          <span className="font-bold text-red-600">{streak}</span>
-          <span className="text-gray-600 dark:text-gray-400"> in </span>
-          <span className="font-semibold text-gray-800 dark:text-gray-100">{category}</span>
-          <span className="text-gray-600 dark:text-gray-400"> at </span>
-          <span className="font-semibold text-gray-800 dark:text-gray-100">{difficulty}</span>
-          <span className="text-gray-600 dark:text-gray-400"> difficulty!</span>
-        </p>
-        <p className="text-sm text-gray-600 dark:text-gray-400 italic">
-          Do you have what it takes to beat this challenge? 🏆
-        </p>
-      </div>
-
-      {/* Stats Display */}
-      <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md w-full max-w-sm mb-6 transition-colors duration-200">
-        <div className="space-y-4">
-          <div>
-            <p className="text-gray-600 dark:text-gray-400">Category</p>
-            <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{category}</p>
-          </div>
-          <div>
-            <p className="text-gray-600 dark:text-gray-400">Difficulty</p>
-            <p className="text-xl font-bold text-gray-900 dark:text-gray-100">{difficulty}</p>
-          </div>
-          <div>
-            <p className="text-gray-600 dark:text-gray-400">Streak to Beat</p>
-            <p className="text-2xl font-bold text-red-600 dark:text-red-400">{streak}</p>
+      <div className="w-full max-w-2xl">
+        <h2 className="text-2xl font-bold mb-6 text-purple-800 dark:text-purple-300">Challenge Accepted!</h2>
+        
+        {/* Challenge Info */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-6 transition-colors duration-200">
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Challenger</p>
+              <p className="text-xl font-semibold text-gray-800 dark:text-gray-100">{name}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Title</p>
+              <p className="text-xl font-semibold text-purple-600 dark:text-purple-300">{title}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Score to Beat</p>
+              <p className="text-3xl font-bold text-red-600 dark:text-red-400">{score}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Category</p>
+              <p className="text-xl font-semibold text-gray-800 dark:text-gray-100">{category}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Difficulty</p>
+              <p className="text-xl font-semibold text-gray-800 dark:text-gray-100">{difficulty}</p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <button
-        onClick={handleStartGame}
-        className="px-8 py-4 text-xl font-bold rounded-lg bg-green-600 text-white hover:bg-green-700 transition-all transform hover:scale-105"
-      >
-        Accept Challenge
-      </button>
+        <div className="text-center mb-6">
+          <p className="text-lg text-gray-700 dark:text-gray-300 mb-4">
+            Can you beat {name}'s score of {score} in {category}?
+          </p>
+          <button
+            className="px-6 py-3 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold text-lg hover:from-purple-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow"
+            onClick={handleStartGame}
+          >
+            Start Game
+          </button>
+        </div>
+      </div>
     </div>
   );
 } 

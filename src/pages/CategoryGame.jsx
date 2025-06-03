@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { categories } from "../data/categories";
 import bannerImage from "../assets/banner.jpg";
+import { getUserTitle } from "../data/titles";
 
 export default function CategoryGame() {
   const { mainCategorySlug, subcategorySlug } = useParams();
@@ -142,11 +143,13 @@ export default function CategoryGame() {
   };
 
   const handleTimeout = () => {
+    const userTitle = getUserTitle(score, `${mainCategory} - ${subcategory}`);
     navigate('/game-over', { 
       state: { 
         score, 
         category: `${mainCategory} - ${subcategory}`,
-        timer: timerDuration
+        timer: timerDuration,
+        userTitle
       } 
     });
   };
@@ -172,17 +175,20 @@ export default function CategoryGame() {
         }, 1000);
       }
     } else {
-      setTimeout(() => {
-        navigate('/answer', { 
-          state: { 
-            score, 
-            category: `${mainCategory} - ${subcategory}`,
-            timer: timerDuration,
-            correctAnswer: questions[current].statements[correctAnswer],
-            explanation: questions[current].explanation || "That was the bluff!"
-          } 
-        });
-      }, 1000);
+      const userTitle = getUserTitle(score, `${mainCategory} - ${subcategory}`);
+      // Clear any existing timers
+      clearInterval(timer);
+      // Navigate immediately to answer screen
+      navigate('/answer', { 
+        state: { 
+          score, 
+          category: `${mainCategory} - ${subcategory}`,
+          timer: timerDuration,
+          correctAnswer: questions[current].statements[correctAnswer],
+          explanation: questions[current].explanation || "That was the bluff!",
+          userTitle
+        } 
+      });
     }
   };
 

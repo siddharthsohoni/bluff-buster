@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
@@ -12,8 +12,25 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+// Log configuration (without sensitive values)
+console.log('Firebase Config:', {
+  authDomain: firebaseConfig.authDomain,
+  projectId: firebaseConfig.projectId,
+  storageBucket: firebaseConfig.storageBucket
+});
+
+let app;
+let db;
+
+try {
+  // Initialize Firebase
+  app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+  console.log('Firebase initialized successfully');
+} catch (error) {
+  // Firebase already initialized
+  app = getApp();
+  db = getFirestore(app);
+}
 
 export { db }; 

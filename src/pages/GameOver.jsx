@@ -28,8 +28,8 @@ export default function GameOver() {
     timer = 15,
     correctAnswer,
     explanation,
+    userTitle
   } = location.state || {};
-  const userTitle = getUserTitle(score, category);
 
   // Get difficulty name based on timer
   const getDifficultyName = (timer) => {
@@ -48,9 +48,9 @@ export default function GameOver() {
   const difficulty = getDifficultyName(timer);
 
   const shareGame = (platform) => {
-    // Use getFullUrl to ensure the # is included in the challenge link for production
-    const challengePath = `/challenge?category=${encodeURIComponent(category)}&difficulty=${encodeURIComponent(difficulty)}&score=${score}&name=${encodeURIComponent(leaderboardName || "A friend")}`;
-    const challengeUrl = getFullUrl(challengePath); // This will include the # in production
+    // Format the challenge path without leading slash
+    const challengePath = `challenge?category=${encodeURIComponent(category)}&difficulty=${encodeURIComponent(difficulty)}&score=${score}&name=${encodeURIComponent(leaderboardName || "A friend")}&title=${encodeURIComponent(userTitle)}`;
+    const challengeUrl = getFullUrl(challengePath);
 
     const shareText = `🔥 I just scored ${score} points in the "${category}" category on ${difficulty} difficulty and earned the title "${userTitle}"! 🏆 Think you can beat me? 😏 Play Bluff Buster now and prove it! 👉 ${challengeUrl}`;
     const encodedText = encodeURIComponent(shareText);
@@ -77,7 +77,8 @@ export default function GameOver() {
         break;
 
       default:
-        console.error("Unsupported platform:", platform);
+        // Unsupported platform
+        break;
     }
   };
 
@@ -86,9 +87,7 @@ export default function GameOver() {
     setIsLoading(true);
     setError(null);
     try {
-      console.log("Fetching leaderboard for:", { category, difficulty });
       const leaderboard = await getLeaderboard(category, difficulty);
-      console.log("Received leaderboard data:", leaderboard);
       setLeaderboardData(leaderboard);
 
       // Check if score qualifies
@@ -97,11 +96,9 @@ export default function GameOver() {
         category,
         difficulty
       );
-      console.log("Score qualifies:", qualifies);
       setScoreQualifies(qualifies);
     } catch (error) {
-      console.error("Error checking leaderboard:", error);
-      setError("Failed to load leaderboard. Please try again.");
+      setError(error.message || "Failed to load leaderboard. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -109,7 +106,9 @@ export default function GameOver() {
 
   // Load leaderboard data when component mounts
   useEffect(() => {
-    checkLeaderboardQualification();
+    if (score && category && difficulty) {
+      checkLeaderboardQualification();
+    }
   }, [category, difficulty, score]);
 
   const handleLeaderboardSubmit = async () => {
@@ -130,8 +129,7 @@ export default function GameOver() {
       // Refresh leaderboard after submission
       await checkLeaderboardQualification();
     } catch (error) {
-      console.error("Error submitting score:", error);
-      setError("Failed to submit score. Please try again.");
+      setError(error.message || "Failed to submit score. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -247,7 +245,7 @@ export default function GameOver() {
             <button
               className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold text-base hover:from-purple-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow"
               onClick={() =>
-                navigate("/beat-score", { state: { score, category, timer } })
+                navigate("/beat-score", { state: { score, category, timer, userTitle } })
               }
             >
               Beat the Score
