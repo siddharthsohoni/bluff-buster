@@ -4,11 +4,12 @@ export function getBasePath() {
 }
 
 export const getFullUrl = (path) => {
-  const baseUrl = import.meta.env.MODE === 'production' 
-    ? 'https://bluff-buster.web.app' 
-    : 'http://localhost:5173';
+  // Use the current origin (domain) for the base URL
+  const baseUrl = window.location.origin;
+  // Add the base path for GitHub Pages in production
+  const basePath = import.meta.env.MODE === 'production' ? '/bluff-buster' : '';
   // Ensure path starts with /#/ for proper routing
   const formattedPath = path.startsWith('/') ? path : `/${path}`;
   const hashPath = formattedPath.startsWith('/#') ? formattedPath : `/#${formattedPath}`;
-  return `${baseUrl}${hashPath}`;
+  return `${baseUrl}${basePath}${hashPath}`;
 }; 
