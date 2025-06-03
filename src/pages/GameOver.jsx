@@ -23,13 +23,13 @@ export default function GameOver() {
 
   // Get game data from location state
   const {
-    streak = 0,
+    score = 0,
     category = "Unknown Category",
     timer = 15,
     correctAnswer,
     explanation,
   } = location.state || {};
-  const userTitle = getUserTitle(streak, category);
+  const userTitle = getUserTitle(score, category);
 
   // Get difficulty name based on timer
   const getDifficultyName = (timer) => {
@@ -49,10 +49,10 @@ export default function GameOver() {
 
   const shareGame = (platform) => {
     // Use getFullUrl to ensure the # is included in the challenge link for production
-    const challengePath = `/challenge?category=${encodeURIComponent(category)}&difficulty=${encodeURIComponent(difficulty)}&streak=${streak}&name=${encodeURIComponent(leaderboardName || "A friend")}`;
+    const challengePath = `/challenge?category=${encodeURIComponent(category)}&difficulty=${encodeURIComponent(difficulty)}&score=${score}&name=${encodeURIComponent(leaderboardName || "A friend")}`;
     const challengeUrl = getFullUrl(challengePath); // This will include the # in production
 
-    const shareText = `🔥 I just scored a streak of ${streak} in the "${category}" category on ${difficulty} difficulty and earned the title "${userTitle}"! 🏆 Think you can beat me? 😏 Play Bluff Buster now and prove it! 👉 ${challengeUrl}`;
+    const shareText = `🔥 I just scored ${score} points in the "${category}" category on ${difficulty} difficulty and earned the title "${userTitle}"! 🏆 Think you can beat me? 😏 Play Bluff Buster now and prove it! 👉 ${challengeUrl}`;
     const encodedText = encodeURIComponent(shareText);
 
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -93,7 +93,7 @@ export default function GameOver() {
 
       // Check if score qualifies
       const qualifies = await checkScoreQualification(
-        streak,
+        score,
         category,
         difficulty
       );
@@ -110,7 +110,7 @@ export default function GameOver() {
   // Load leaderboard data when component mounts
   useEffect(() => {
     checkLeaderboardQualification();
-  }, [category, difficulty, streak]);
+  }, [category, difficulty, score]);
 
   const handleLeaderboardSubmit = async () => {
     if (!leaderboardName.trim()) return;
@@ -120,7 +120,7 @@ export default function GameOver() {
     try {
       await addScore({
         name: leaderboardName.trim(),
-        streak,
+        score,
         category,
         difficulty,
       });
@@ -177,13 +177,13 @@ export default function GameOver() {
                       <span className="font-semibold text-sm text-gray-800 dark:text-gray-200">{entry.name}</span>
                     </div>
                     <div className="text-right">
-                      <div className="font-bold text-red-600 dark:text-red-400">{entry.streak}</div>
+                      <div className="font-bold text-red-600 dark:text-red-400">{entry.score}</div>
                     </div>
                   </div>
                 ))
               )}
             </div>
-            {!isLoading && (scoreQualifies || leaderboardData.length < 5) && !hasSubmitted && streak > 0 && (
+            {!isLoading && (scoreQualifies || leaderboardData.length < 5) && !hasSubmitted && score > 0 && (
               <button
                 className="mt-3 w-full px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold text-sm hover:from-purple-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 onClick={() => setShowLeaderboardPopup(true)}
@@ -201,58 +201,25 @@ export default function GameOver() {
         {/* Game Stats Section */}
         <div className="mb-4">
           <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-700 rounded-lg p-3 shadow-sm">
-            {/* Streak Display */}
+            {/* Score and Title Display */}
             <div className="text-center mb-3">
               <p className="text-[10px] text-gray-500 dark:text-gray-400 mb-1">
-                Game Streak
+                Your Score
               </p>
-              <div className="inline-flex items-center gap-2">
-                <span className="text-3xl font-bold text-red-600 dark:text-red-400">
-                  {streak}
-                </span>
-                <span className="text-xl">🔥</span>
-              </div>
-            </div>
-
-            {/* Stats Grid */}
-            <div className="grid grid-cols-3 gap-2">
-              {/* Category Card */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-2 shadow-sm">
-                <div className="flex items-center justify-center mb-1">
-                  <span className="text-lg">🎯</span>
+              <div className="flex flex-col items-center gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-4xl font-bold text-red-600 dark:text-red-400">
+                    {score}
+                  </span>
                 </div>
-                <p className="text-[10px] text-gray-500 dark:text-gray-400 text-center">
-                  Category
-                </p>
-                <p className="text-xs font-semibold text-center text-gray-800 dark:text-gray-200 truncate">
-                  {category}
-                </p>
-              </div>
-
-              {/* Difficulty Card */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-2 shadow-sm">
-                <div className="flex items-center justify-center mb-1">
-                  <span className="text-lg">⚡</span>
+                <div className="bg-white dark:bg-gray-800 rounded-lg px-4 py-2 shadow-sm">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                    Title Earned
+                  </p>
+                  <p className="text-lg font-semibold text-purple-600 dark:text-purple-400">
+                    {userTitle}
+                  </p>
                 </div>
-                <p className="text-[10px] text-gray-500 dark:text-gray-400 text-center">
-                  Difficulty
-                </p>
-                <p className="text-xs font-semibold text-center text-gray-800 dark:text-gray-200">
-                  {difficulty}
-                </p>
-              </div>
-
-              {/* Title Card */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-2 shadow-sm">
-                <div className="flex items-center justify-center mb-1">
-                  <span className="text-lg">👑</span>
-                </div>
-                <p className="text-[10px] text-gray-500 dark:text-gray-400 text-center">
-                  Title
-                </p>
-                <p className="text-xs font-semibold text-center text-purple-600 dark:text-purple-400 truncate">
-                  {userTitle}
-                </p>
               </div>
             </div>
           </div>
@@ -280,10 +247,10 @@ export default function GameOver() {
             <button
               className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 text-white font-bold text-base hover:from-purple-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow"
               onClick={() =>
-                navigate("/beat-streak", { state: { streak, category, timer } })
+                navigate("/beat-score", { state: { score, category, timer } })
               }
             >
-              Beat the Streak
+              Beat the Score
             </button>
           </div>
           <button

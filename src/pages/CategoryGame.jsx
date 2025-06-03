@@ -15,7 +15,7 @@ export default function CategoryGame() {
   const [selected, setSelected] = useState(null);
   const [timer, setTimer] = useState(timerDuration);
   const [current, setCurrent] = useState(0);
-  const [streak, setStreak] = useState(0);
+  const [score, setScore] = useState(0);
   const [gamePhase, setGamePhase] = useState("countdown");
   const [countdown, setCountdown] = useState(3);
   const [shouldAdvance, setShouldAdvance] = useState(false);
@@ -48,7 +48,7 @@ export default function CategoryGame() {
         return shuffled.slice(0, n);
       }
       // Generate questions: 2 true, 1 bluff, no repeats in game
-      const numQuestions = Math.min(10, Math.floor(Math.min(pool.trueStatements.length / 2, pool.bluffs.length)));
+      const numQuestions = Math.floor(Math.min(pool.trueStatements.length / 2, pool.bluffs.length));
       const usedTrue = new Set();
       const usedBluff = new Set();
       const generatedQuestions = [];
@@ -112,10 +112,39 @@ export default function CategoryGame() {
     }
   }, [shouldAdvance, timerDuration]);
 
+  // Function to generate new questions when needed
+  const generateNewQuestions = async () => {
+    const pool = await getQuestionPool(mainCategory, subcategory);
+    if (!pool) return;
+
+    function getUniqueRandom(arr, n, usedSet) {
+      const available = arr.filter(item => !usedSet.has(item));
+      const shuffled = available.sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, n);
+    }
+
+    const numQuestions = Math.floor(Math.min(pool.trueStatements.length / 2, pool.bluffs.length));
+    const usedTrue = new Set();
+    const usedBluff = new Set();
+    const newQuestions = [];
+
+    for (let i = 0; i < numQuestions; i++) {
+      const trueStmts = getUniqueRandom(pool.trueStatements, 2, usedTrue);
+      trueStmts.forEach(s => usedTrue.add(s));
+      const bluff = getUniqueRandom(pool.bluffs, 1, usedBluff)[0];
+      usedBluff.add(bluff);
+      const statements = [...trueStmts, bluff].sort(() => Math.random() - 0.5);
+      const answer = statements.indexOf(bluff);
+      newQuestions.push({ statements, answer });
+    }
+
+    setQuestions(prev => [...prev, ...newQuestions]);
+  };
+
   const handleTimeout = () => {
     navigate('/game-over', { 
       state: { 
-        streak, 
+        score, 
         category: `${mainCategory} - ${subcategory}`,
         timer: timerDuration
       } 
@@ -126,7 +155,7 @@ export default function CategoryGame() {
     setSelected(index);
     const correctAnswer = questions[current].answer;
     if (index === correctAnswer) {
-      setStreak((prev) => prev + 1);
+      setScore((prev) => prev + 1);
       if (current + 1 < questions.length) {
         setTimeout(() => {
           setSelected(null);
@@ -134,21 +163,19 @@ export default function CategoryGame() {
           setTimer(timerDuration);
         }, 1000);
       } else {
+        // Generate new questions when we're running low
+        generateNewQuestions();
         setTimeout(() => {
-          navigate('/game-over', { 
-            state: { 
-              streak: streak + 1, 
-              category: `${mainCategory} - ${subcategory}`,
-              timer: timerDuration
-            } 
-          });
+          setSelected(null);
+          setCurrent(prev => prev + 1);
+          setTimer(timerDuration);
         }, 1000);
       }
     } else {
       setTimeout(() => {
         navigate('/answer', { 
           state: { 
-            streak, 
+            score, 
             category: `${mainCategory} - ${subcategory}`,
             timer: timerDuration,
             correctAnswer: questions[current].statements[correctAnswer],
@@ -188,7 +215,7 @@ export default function CategoryGame() {
       </h1>
       {/* Timer */}
       <div className="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Time Left: {timer}s</div>
-      <div className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Streak: {streak}</div>
+      <div className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Score: {score}</div>
       {/* Question and Answer Buttons */}
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md text-xl transition-colors duration-200">
         {statements.map((s, i) => (

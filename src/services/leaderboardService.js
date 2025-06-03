@@ -34,7 +34,7 @@ export const getLeaderboard = async (category = null, difficulty = null) => {
       where('date', '>=', sevenDaysAgo),
       where('date', '<=', today),
       orderBy('date', 'desc'),
-      orderBy('streak', 'desc'),
+      orderBy('score', 'desc'),
       limit(5)
     );
 
@@ -62,20 +62,20 @@ export const getLeaderboard = async (category = null, difficulty = null) => {
 // Add a new score to the leaderboard
 export const addScore = async (scoreData) => {
   try {
-    const { name, streak, category, difficulty } = scoreData;
+    const { name, score, category, difficulty } = scoreData;
     const today = getTodayDate();
 
-    const score = {
+    const scoreEntry = {
       name,
-      streak,
+      score,
       category,
       difficulty,
       date: today,
       timestamp: serverTimestamp()
     };
 
-    const docRef = await addDoc(collection(db, 'leaderboard'), score);
-    return { id: docRef.id, ...score };
+    const docRef = await addDoc(collection(db, 'leaderboard'), scoreEntry);
+    return { id: docRef.id, ...scoreEntry };
   } catch (error) {
     console.error('Error adding score:', error);
     throw error;
@@ -83,17 +83,17 @@ export const addScore = async (scoreData) => {
 };
 
 // Check if a score qualifies for the leaderboard
-export const checkScoreQualification = async (streak, category = null, difficulty = null) => {
+export const checkScoreQualification = async (score, category = null, difficulty = null) => {
   try {
-    // First check if streak is at least 1
-    if (streak < 1) {
-      console.log('Score too low: Must have at least 1 streak');
+    // First check if score is at least 1
+    if (score < 1) {
+      console.log('Score too low: Must have at least 1 point');
       return false;
     }
 
     const leaderboard = await getLeaderboard(category, difficulty);
     console.log('Current leaderboard:', leaderboard);
-    console.log('User streak:', streak);
+    console.log('User score:', score);
     
     // If there are fewer than 5 entries, the score qualifies
     if (leaderboard.length < 5) {
@@ -102,9 +102,9 @@ export const checkScoreQualification = async (streak, category = null, difficult
     }
 
     // If there are 5 entries, qualify if score is higher than lowest score
-    const lowestScore = leaderboard[leaderboard.length - 1].streak;
+    const lowestScore = leaderboard[leaderboard.length - 1].score;
     console.log('Lowest score in leaderboard:', lowestScore);
-    const qualifies = streak > lowestScore;
+    const qualifies = score > lowestScore;
     console.log('Qualifies:', qualifies);
     return qualifies;
   } catch (error) {

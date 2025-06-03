@@ -7,6 +7,7 @@ export function getBasePath() {
 export function getFullUrl(path) {
   const base = getBasePath();
   const origin = window.location.origin;
-  // Ensure no double slashes
-  return `${origin}${base}${path.startsWith('/') ? path : '/' + path}`;
+  // Remove leading slash from path if it exists
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  return `${origin}${base}${cleanPath}`;
 } 
