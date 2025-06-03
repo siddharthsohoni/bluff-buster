@@ -54,10 +54,20 @@ export default function About() {
           <div className="bg-gray-100 p-6 rounded-lg shadow-md text-left">
             <p className="mb-4">Test your knowledge in various categories:</p>
             <ul className="list-disc list-inside space-y-2">
-              <li>Science</li>
+              <li>Hollywood Movies</li>
+              <li>Hollywood TV Shows</li>
+              <li>Hollywood Celebrities</li>
+              <li>Bollywood Movies</li>
+              <li>Bollywood TV Shows</li>
+              <li>Bollywood Celebrities</li>
               <li>Pop Culture</li>
+              <li>Pop Culture India</li>
+              <li>Celebrities</li>
+              <li>Science</li>
+              <li>Astronomy</li>
               <li>History</li>
               <li>Geography</li>
+              <li>Tech</li>
               <li>Food & Culture</li>
               <li>Animals</li>
             </ul>

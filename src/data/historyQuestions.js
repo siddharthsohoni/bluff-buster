@@ -1,807 +1,206 @@
-const historyQuestions = {
-    category: "History",
-    questions: [
-      {
-        statements: [
-          "The Great Wall of China was built to keep out invaders",
-          "World War I began in 1939",
-          "Julius Caesar was assassinated in ancient Rome",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Declaration of Independence was signed in 1776",
-          "Abraham Lincoln was the first U.S. president",
-          "The Civil War in the U.S. was partly about slavery",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The French Revolution began in the late 1700s",
-          "Napoleon was defeated at the Battle of Waterloo",
-          "The Renaissance started after the invention of the telephone",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Titanic sank in 1912",
-          "World War II ended in 1945",
-          "The Internet was created during the Roman Empire",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "Martin Luther King Jr. gave his 'I Have a Dream' speech in 1963",
-          "The Berlin Wall fell in 1989",
-          "The Cold War involved direct battles between the U.S. and USSR",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "Christopher Columbus sailed to the Americas in 1492",
-          "The Wright brothers invented the telephone",
-          "The first human landed on the Moon in 1969",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Roman Empire once ruled much of Europe",
-          "The pyramids of Egypt were built in the 20th century",
-          "The Magna Carta was signed in 1215",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "Albert Einstein developed the theory of relativity",
-          "The Great Depression began in the 1920s",
-          "Queen Victoria ruled the United States",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "Vikings were skilled sailors from Scandinavia",
-          "The American Civil War ended in 1776",
-          "The Boston Tea Party was a protest against British taxation",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "Nelson Mandela was imprisoned for 27 years",
-          "Ancient Egyptians used hieroglyphics for writing",
-          "The Renaissance took place before Ancient Greece",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Soviet Union was formed after World War II",
-          "George Washington was the first President of the United States",
-          "Leonardo da Vinci painted the Mona Lisa",
-        ],
-        answer: 0,
-      },
-      {
-        statements: [
-          "The Vietnam War ended in 1975",
-          "The Industrial Revolution began in the 1700s",
-          "Alexander the Great ruled the Roman Empire",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "Genghis Khan founded the Mongol Empire",
-          "The United Nations was created after World War II",
-          "The Black Death occurred during the 21st century",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "Women in the U.S. gained the right to vote in 1920",
-          "The Eiffel Tower is in London",
-          "The Cold War was a political and ideological conflict",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "Joan of Arc was a French military leader",
-          "The Mayans lived in ancient Egypt",
-          "The Apollo 11 mission landed on the Moon",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The U.S. bought Alaska from Russia",
-          "Cleopatra was the last pharaoh of ancient Egypt",
-          "The Berlin Wall was built to keep East Germans out of France",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The invention of the printing press is credited to Gutenberg",
-          "The Cuban Missile Crisis happened in the 1960s",
-          "The Colosseum is located in Greece",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Stone Age came before the Iron Age",
-          "The American Revolutionary War was fought in the 1900s",
-          "The Olympic Games began in ancient Greece",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "King Tutankhamun was an Egyptian pharaoh",
-          "World War II included battles in Europe and the Pacific",
-          "The Great Fire of London happened in New York City",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The U.S. Constitution was signed in Philadelphia",
-          "The sinking of the Lusitania led directly to World War II",
-          "The Roaring Twenties were a period of economic growth in the 1920s",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The first Olympic Games were held in ancient Greece",
-          "JFK was assassinated in 1963",
-          "The telephone was invented by Thomas Edison",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Roman numeral for 10 is X",
-          "The Great Fire of London happened in 1666",
-          "The Colosseum was built in Egypt",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The American Civil Rights Movement peaked in the 1960s",
-          "The Berlin Wall separated North and South Korea",
-          "The Treaty of Versailles ended World War I",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "Marie Curie won Nobel Prizes in both Physics and Chemistry",
-          "The Great Depression ended World War II",
-          "The Aztecs lived in what is now Mexico",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "Winston Churchill was the Prime Minister of the UK during WWII",
-          "The Boston Massacre happened during the American Civil War",
-          "The Cold War lasted for several decades",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Great Wall of China is visible from space",
-          "The French Revolution began in 1789",
-          "The Reformation was started by Martin Luther",
-        ],
-        answer: 0,
-      },
-      {
-        statements: [
-          "The Space Race was part of the Cold War",
-          "The Wright brothers were known for aviation",
-          "The Renaissance started in Canada",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "Julius Caesar was a Roman emperor",
-          "The Black Death killed millions in Europe",
-          "The Great Chicago Fire happened in the 1800s",
-        ],
-        answer: 0,
-      },
-      {
-        statements: [
-          "The Soviet Union launched the first satellite into space",
-          "Abraham Lincoln wrote the Gettysburg Address",
-          "The Battle of Hastings took place in the 1900s",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "Pearl Harbor was attacked in 1941",
-          "The Roman Empire split into East and West",
-          "The Declaration of Independence was written during the Civil War",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Inca Empire was located in South America",
-          "Anne Frank wrote her diary during the Cold War",
-          "George Washington led the Continental Army",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Taj Mahal was built in India",
-          "The Great Depression began in 1929",
-          "The Internet was invented in the 18th century",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Louisiana Purchase doubled the size of the U.S.",
-          "Adolf Hitler was the leader of France during WWII",
-          "The Civil Rights Act passed in 1964",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The first World War began after the assassination of Archduke Franz Ferdinand",
-          "The Soviet Union collapsed in 1991",
-          "The pyramids of Giza were built after the discovery of electricity",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "Queen Elizabeth I was the daughter of Henry VIII",
-          "Neil Armstrong was the first person on Mars",
-          "The Boston Tea Party was a protest against British taxes",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Enlightenment emphasized reason and individualism",
-          "Alexander Hamilton appears on the $100 bill",
-          "The U.S. fought in the Korean War in the 1950s",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "Rosa Parks refused to give up her bus seat in Montgomery",
-          "The Berlin Airlift occurred during the Cold War",
-          "Napoleon was American",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Apollo 13 mission landed successfully on the Moon",
-          "The Statue of Liberty was a gift from France",
-          "The Mayflower brought Pilgrims to North America",
-        ],
-        answer: 0,
-      },
-      {
-        statements: [
-          "The Great Famine in Ireland occurred in the 19th century",
-          "The first printing press was invented in China",
-          "The Iron Curtain was a term used during the Cold War",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Rosetta Stone helped decode Egyptian hieroglyphs",
-          "World War II started when Germany invaded Poland",
-          "The Great Wall of China was built during the Cold War",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The United Nations was founded after World War II",
-          "The Great Depression began in the 1820s",
-          "Cleopatra was a ruler of ancient Egypt",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The American Revolutionary War ended in 1783",
-          "The Rosetta Stone helped historians understand Egyptian writing",
-          "Genghis Khan ruled the Ottoman Empire",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Magna Carta limited the power of English kings",
-          "The Renaissance was a cultural movement in the 15th and 16th centuries",
-          "The Eiffel Tower was built during the Roman Empire",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The atomic bomb was dropped on Hiroshima in 1945",
-          "The Battle of Gettysburg was a major WWII battle",
-          "The Berlin Wall separated East and West Berlin",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Roman Empire was ruled by emperors",
-          "The Silk Road was an ancient trade route",
-          "The Internet was invented during the Middle Ages",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Wright brothers flew the first airplane in 1903",
-          "Martin Luther nailed his 95 Theses in 1517",
-          "Napoleon ruled over the Soviet Union",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Cold War ended in the early 1990s",
-          "The Titanic was a military battleship",
-          "Ancient Rome had a Senate and Republic before becoming an empire",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The U.S. Constitution was ratified in 1787",
-          "Vikings discovered the Americas before Columbus",
-          "Marco Polo was an ancient Egyptian explorer",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The French Revolution inspired other democratic movements",
-          "The Inquisition was a series of art exhibitions",
-          "The Parthenon is located in Athens, Greece",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Great Fire of Rome occurred under Emperor Nero",
-          "The Statue of Liberty was a gift from Spain",
-          "Mount Vesuvius destroyed the city of Pompeii",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The League of Nations existed before the United Nations",
-          "The Boston Tea Party was led by the Sons of Liberty",
-          "Albert Einstein developed the theory of gravity",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Zulu Kingdom was in southern Africa",
-          "Queen Elizabeth II began her reign in the 1800s",
-          "The Taj Mahal was built by the Mughal emperor Shah Jahan",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Battle of Thermopylae was fought by the Spartans",
-          "Ben Franklin was one of the U.S. Founding Fathers",
-          "The Cold War featured nuclear battles between the U.S. and USSR",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "Joan of Arc led French troops during the Hundred Years’ War",
-          "The American colonies fought against France in the Revolutionary War",
-          "The Colosseum in Rome was used for gladiator games",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Soviet Union launched the Sputnik satellite",
-          "The Emancipation Proclamation ended slavery worldwide",
-          "The Boston Massacre happened before the American Revolution",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Black Plague significantly reduced Europe's population",
-          "King Louis XIV of France was known as the Sun King",
-          "The printing press was used to make stone tablets",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The United States dropped nuclear bombs during World War II",
-          "The first humans appeared during the Industrial Revolution",
-          "The Renaissance produced great works of art and science",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "Florence Nightingale is considered the founder of modern nursing",
-          "The Roman Colosseum was used as a parliament",
-          "The Great Wall of China took centuries to build",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "Galileo supported the idea that Earth revolves around the Sun",
-          "The Treaty of Versailles was signed after World War I",
-          "Moses was a general in the American Revolution",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The ancient Olympics were held to honor Zeus",
-          "The 19th Amendment granted women the right to vote in the U.S.",
-          "Julius Caesar was a Greek philosopher",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "World War I began in 1914",
-          "The Mayan civilization was based in South America",
-          "The United States joined WWII after the attack on Pearl Harbor",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Empire State Building was completed during the Great Depression",
-          "The Bolshevik Revolution happened in Russia",
-          "The Magna Carta was signed in the United States",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "Nelson Mandela became president of South Africa after apartheid",
-          "Christopher Columbus discovered the moon",
-          "The Wright brothers made the first powered flight",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Suez Canal connects the Atlantic and Pacific Oceans",
-          "The Eiffel Tower was built in the 19th century",
-          "The Great Depression affected countries worldwide",
-        ],
-        answer: 0,
-      },
-      {
-        statements: [
-          "Abraham Lincoln delivered the Gettysburg Address",
-          "The Allies won World War II",
-          "The Berlin Wall was built to keep Americans out of Germany",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Declaration of Independence was signed in 1776",
-          "The Roman Empire fell in 476 AD",
-          "The Cold War ended in 1820",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "George Orwell wrote '1984'",
-          "The ancient city of Troy is a fictional place",
-          "The League of Nations was created after WWI",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Titanic struck an iceberg in the Atlantic Ocean",
-          "The Apollo missions were led by NASA",
-          "The Great Fire of London happened in Paris",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "King Tutankhamun's tomb was discovered in the 20th century",
-          "The U.S. bought Louisiana from France",
-          "The Crusades were led by Mongol warriors",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "Benito Mussolini led Italy during WWII",
-          "The United Nations replaced the League of Legends",
-          "World War II ended with the surrender of Japan",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Vietnam War lasted over a decade",
-          "Pablo Picasso was a famous Spanish general",
-          "The Bastille was a prison stormed during the French Revolution",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Cold War was fought between NATO and the Warsaw Pact",
-          "The Aztecs built large pyramids in what is now Mexico City",
-          "The Boston Tea Party was a celebration of a British king’s birthday",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Hindenburg disaster involved a crashing airship",
-          "Queen Elizabeth I ruled during the Elizabethan Era",
-          "The Great Wall of China was built in a single year",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The American Civil War ended in 1865",
-          "Mahatma Gandhi led India’s fight for independence",
-          "The Battle of Waterloo was fought in Australia",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Parthenon is located in Rome",
-          "The Reign of Terror was part of the French Revolution",
-          "Sputnik was the first artificial satellite launched into space",
-        ],
-        answer: 0,
-      },
-      {
-        statements: [
-          "The Middle Ages came after the Renaissance",
-          "Martin Luther King Jr. promoted nonviolent protest",
-          "The Great Chicago Fire occurred in the 1800s",
-        ],
-        answer: 0,
-      },
-      {
-        statements: [
-          "The Berlin Wall divided East and West Berlin",
-          "The Treaty of Paris ended the American Revolutionary War",
-          "Henry Ford invented the lightbulb",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Cuban Missile Crisis involved the U.S. and the USSR",
-          "The Statue of Liberty was a gift from France",
-          "The Trojan War happened during the Industrial Revolution",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "Mount Rushmore features the faces of four U.S. presidents",
-          "World War II ended before World War I began",
-          "The Renaissance began in Italy",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "Leonardo da Vinci painted the Mona Lisa",
-          "The Berlin Airlift was during the Cold War",
-          "The Rosetta Stone was written in Latin only",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Black Death occurred in the 14th century",
-          "The Roman numeral 'L' stands for 50",
-          "The U.S. entered World War I in 1941",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Berlin Wall was constructed in the 1960s",
-          "The Great Depression began with a stock market crash in 1929",
-          "Alexander the Great conquered North America",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Renaissance began in Florence, Italy",
-          "The U.S. Civil Rights Act was signed in 1964",
-          "The Aztecs ruled the territory now known as Canada",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Huns were led by Attila",
-          "The Cold War featured the Cuban Missile Crisis",
-          "The Emancipation Proclamation was issued by Thomas Jefferson",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Rosetta Stone was key to deciphering hieroglyphics",
-          "The Great Pyramid of Giza was built in the 20th century",
-          "World War II ended in 1945",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "Ancient Athens is known as the birthplace of democracy",
-          "The Boston Tea Party occurred after the Revolutionary War",
-          "Cleopatra was known for her alliance with Julius Caesar",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Great Fire of Rome happened under Nero’s rule",
-          "The Inca Empire was based in the Andes Mountains",
-          "The Eiffel Tower was a gift from the U.S. to France",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Treaty of Versailles helped end World War I",
-          "Ben Franklin was a U.S. President",
-          "The Great Wall of China is thousands of miles long",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Titanic was considered unsinkable",
-          "Joan of Arc was burned at the stake",
-          "The Internet was invented in the 1800s",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "Ancient Romans spoke Latin",
-          "The 19th Amendment gave women in the U.S. the right to vote",
-          "Albert Einstein discovered penicillin",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Great Depression began after World War I",
-          "The Vietnam War was part of the Cold War conflict",
-          "The Leaning Tower of Pisa was built in the 2000s",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The U.S. Constitution was written in the 18th century",
-          "Julius Caesar was stabbed by his friends in the Senate",
-          "The American Revolution was fought against Canada",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "Marie Antoinette was queen during the French Revolution",
-          "The first successful airplane flight was in 2003",
-          "The Berlin Airlift supplied food to West Berlin",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Korean War ended in a peace treaty",
-          "Abraham Lincoln was the 16th U.S. President",
-          "Sparta and Athens were rival city-states",
-        ],
-        answer: 0,
-      },
-      {
-        statements: [
-          "The first Olympic Games were held in ancient Greece",
-          "The Roman Empire fell in 1492",
-          "The Cold War was a global power struggle between the U.S. and the Soviet Union",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The Louisiana Purchase happened under President Jefferson",
-          "The Great Chicago Fire destroyed much of the city in 1871",
-          "Leonardo da Vinci sculpted the statue of David",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "Rosa Parks is known for refusing to give up her seat on a bus",
-          "The Declaration of Independence was signed after the Constitution",
-          "The Colosseum is located in Rome",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "World War II began in 1939",
-          "The U.S. dropped the atomic bomb on Germany",
-          "Martin Luther started the Protestant Reformation",
-        ],
-        answer: 1,
-      },
-      {
-        statements: [
-          "The moon landing occurred during the Space Race",
-          "Nelson Mandela was a key figure in South African apartheid",
-          "The Great Wall of China was built during the Ice Age",
-        ],
-        answer: 2,
-      },
-      {
-        statements: [
-          "The Wright brothers flew the first airplane in North Carolina",
-          "World War I was also called 'The War to End All Wars'",
-          "The Rosetta Stone was discovered in Australia",
-        ],
-        answer: 2,
-      },
-    ],
-    };
-  
-  export default historyQuestions;
+const historyQuestionPool = {
+  category: "History & Geography",
+  subcategory: "History",
+  trueStatements: [
+    "The Great Wall of China was built to protect against invasions from northern tribes.",
+    "The Renaissance began in Italy during the 14th century.",
+    "The American Civil War was fought from 1861 to 1865.",
+    "Julius Caesar was assassinated on the Ides of March in 44 BCE.",
+    "The ancient Egyptians built the pyramids as tombs for their pharaohs.",
+    "The French Revolution began in 1789.",
+    "The Berlin Wall fell in 1989.",
+    "Alexander the Great created one of the largest empires of the ancient world.",
+    "The Industrial Revolution started in Great Britain in the 18th century.",
+    "The Wright brothers made the first powered airplane flight in 1903.",
+    "The Treaty of Versailles ended World War I.",
+    "The Cold War was mainly a rivalry between the USA and the USSR.",
+    "The Magna Carta was signed in 1215.",
+    "Mahatma Gandhi led India's nonviolent independence movement against British rule.",
+    "The Ottoman Empire lasted from around 1299 to 1922.",
+    "The Black Death killed millions in Europe during the 14th century.",
+    "Neil Armstrong was the first person to walk on the Moon.",
+    "The Boston Tea Party was a protest against British taxation.",
+    "The French Empire under Napoleon ended after his defeat at Waterloo.",
+    "The Renaissance saw great advances in art, science, and literature.",
+    "The Roman Empire officially fell in 476 AD.",
+    "The first Olympic Games were held in ancient Greece.",
+    "The invention of the printing press by Gutenberg revolutionized book production.",
+    "The Civil Rights Movement in the USA peaked during the 1960s.",
+    "The Soviet Union dissolved in 1991.",
+    "The Wright brothers flew their plane at Kitty Hawk, North Carolina.",
+    "The Great Depression began with the stock market crash of 1929.",
+    "World War II ended in 1945.",
+    "The Taj Mahal was built by Mughal Emperor Shah Jahan.",
+    "The Viking Age lasted from the late 8th to early 11th century.",
+    "The American Declaration of Independence was signed in 1776.",
+    "The Berlin Wall separated East and West Berlin.",
+    "The Magna Carta limited the power of the English king.",
+    "The Inca Empire was centered in modern-day Peru.",
+    "The ancient city of Troy was discovered by Heinrich Schliemann.",
+    "Queen Elizabeth I ruled England during the 16th century.",
+    "The French Revolution led to the rise of Napoleon Bonaparte.",
+    "The Spanish Armada was defeated by the English navy in 1588.",
+    "The Great Fire of London occurred in 1666.",
+    "The Louisiana Purchase doubled the size of the USA.",
+    "The Suez Canal connects the Mediterranean Sea to the Red Sea.",
+    "The Berlin Wall was constructed in 1961.",
+    "The Cold War never involved direct fighting between the USA and USSR.",
+    "The invention of the telephone is credited to Alexander Graham Bell.",
+    "The Declaration of the Rights of Man was a key document of the French Revolution.",
+    "The first man to circumnavigate the globe was Ferdinand Magellan.",
+    "The Renaissance began after the Middle Ages.",
+    "The Wright brothers' plane was called the Flyer.",
+    "The Great Pyramid of Giza is the oldest of the Seven Wonders of the Ancient World.",
+    "The Battle of Hastings took place in 1066.",
+    "The Roman Republic preceded the Roman Empire.",
+    "The Magna Carta influenced modern constitutional law.",
+    "Cleopatra was the last active ruler of the Ptolemaic Kingdom of Egypt.",
+    "The Industrial Revolution introduced mechanized textile manufacturing.",
+    "The Boston Massacre occurred in 1770.",
+    "The Silk Road was an ancient trade network connecting Asia and Europe.",
+    "The Cuban Missile Crisis brought the world close to nuclear war in 1962.",
+    "The Wright brothers' first flight lasted 12 seconds.",
+    "The Byzantine Empire was the continuation of the Eastern Roman Empire.",
+    "Joan of Arc led French forces during the Hundred Years' War.",
+    "The Renaissance artist Leonardo da Vinci painted the Mona Lisa.",
+    "The English Civil War occurred in the mid-17th century.",
+    "The Berlin Airlift took place after World War II to supply West Berlin.",
+    "The Sepoy Mutiny was a major uprising against British rule in India in 1857.",
+    "The Treaty of Tordesillas divided newly discovered lands between Spain and Portugal.",
+    "The French Revolution led to the Reign of Terror.",
+    "The Wright brothers used a wind tunnel for testing their airplane designs.",
+    "Genghis Khan founded the Mongol Empire.",
+    "The Emancipation Proclamation freed slaves in Confederate states during the American Civil War.",
+    "The Opium Wars were fought between China and Britain in the 19th century.",
+    "The Berlin Wall was built to prevent East Germans from fleeing to West Berlin.",
+    "The Glorious Revolution resulted in the overthrow of King James II of England.",
+    "The Louisiana Purchase was negotiated by President Thomas Jefferson.",
+    "The Cold War led to the space race between the USA and USSR.",
+    "The Treaty of Versailles placed heavy reparations on Germany.",
+    "Martin Luther's 95 Theses sparked the Protestant Reformation.",
+    "The Great Fire of Rome occurred during Emperor Nero's reign.",
+    "Christopher Columbus made his first voyage to the Americas in 1492.",
+    "The Titanic sank in 1912 after hitting an iceberg.",
+    "The Great Depression affected economies worldwide.",
+    "Marco Polo traveled from Venice to China in the 13th century.",
+    "The Battle of Gettysburg was a turning point in the American Civil War.",
+    "Galileo was tried by the Inquisition for his support of heliocentrism.",
+    "The United Nations was founded in 1945 after World War II.",
+    "Adolf Hitler became Chancellor of Germany in 1933.",
+    "The Great Chicago Fire happened in 1871.",
+    "The first permanent English settlement in North America was Jamestown.",
+    "Rosa Parks refused to give up her seat in 1955, sparking a major civil rights movement.",
+    "The Bolshevik Revolution led to the formation of the Soviet Union.",
+    "The Yalta Conference was attended by Roosevelt, Churchill, and Stalin.",
+    "Winston Churchill served as British Prime Minister during World War II.",
+    "The Spanish Civil War occurred in the 1930s.",
+    "Benito Mussolini founded the Fascist Party in Italy.",
+    "The Rosetta Stone was key to deciphering Egyptian hieroglyphs.",
+    "The Hindenburg disaster occurred in 1937.",
+    "The Battle of Stalingrad was one of the bloodiest battles in history.",
+    "Anne Frank's diary provides a firsthand account of the Holocaust.",
+    "The Korean War began in 1950."
+  ],
+  bluffs: [
+    "The Great Wall of China was built to keep out European invaders.",
+    "The Renaissance started in France in the 16th century.",
+    "The American Civil War ended in 1885.",
+    "Julius Caesar was assassinated in 44 AD.",
+    "The pyramids were built as royal palaces.",
+    "The French Revolution began in 1800.",
+    "The Berlin Wall fell in 1979.",
+    "Alexander the Great was a Roman emperor.",
+    "The Industrial Revolution started in the USA.",
+    "The Wright brothers flew the first helicopter.",
+    "The Treaty of Versailles ended World War II.",
+    "The Cold War was a military conflict with battles between USA and USSR.",
+    "The Magna Carta was signed in 1315.",
+    "Mahatma Gandhi was a British general.",
+    "The Ottoman Empire was founded in the 18th century.",
+    "The Black Death happened in the 18th century.",
+    "Neil Armstrong was the first person to orbit the Earth.",
+    "The Boston Tea Party was a celebration of British rule.",
+    "Napoleon Bonaparte was defeated at Trafalgar.",
+    "The Renaissance was a period of war and destruction.",
+    "The Roman Empire fell in 1453.",
+    "The first Olympic Games were held in Rome.",
+    "The printing press was invented in China.",
+    "The Civil Rights Movement happened in the 1980s.",
+    "The Soviet Union was formed in 1991.",
+    "The Wright brothers flew in California.",
+    "The Great Depression ended in 1930.",
+    "World War II began in 1950.",
+    "The Taj Mahal is a palace in Pakistan.",
+    "The Viking Age lasted from 500 to 700 AD.",
+    "The American Declaration of Independence was signed in 1876.",
+    "The Berlin Wall separated North and South Germany.",
+    "The Magna Carta gave absolute power to the king.",
+    "The Inca Empire was located in Mexico.",
+    "Troy is a fictional city from a novel.",
+    "Queen Elizabeth I ruled in the 19th century.",
+    "The French Revolution abolished monarchy worldwide.",
+    "The Spanish Armada defeated the English navy.",
+    "The Great Fire of London destroyed the entire city.",
+    "The Louisiana Purchase was bought from Spain.",
+    "The Suez Canal connects the Atlantic Ocean to the Pacific Ocean.",
+    "The Berlin Wall was taken down in 1950.",
+    "The Cold War was fought mainly in Asia.",
+    "Alexander Graham Bell invented the radio.",
+    "The Declaration of the Rights of Man was signed in England.",
+    "Ferdinand Magellan was a pirate.",
+    "The Renaissance ended the Middle Ages.",
+    "The Wright brothers' plane was called the Spirit of St. Louis.",
+    "The Great Pyramid of Giza was built during the Roman Empire.",
+    "The Battle of Hastings took place in 1166.",
+    "The Roman Empire came before the Roman Republic.",
+    "The Magna Carta gave kings more power over their subjects.",
+    "Cleopatra was a queen of ancient Greece.",
+    "The Industrial Revolution stopped mechanized production.",
+    "The Boston Massacre was a peaceful protest with no casualties.",
+    "The Silk Road was a sea route only.",
+    "The Cuban Missile Crisis happened during World War I.",
+    "The Wright brothers' first flight lasted over an hour.",
+    "The Byzantine Empire was located in South America.",
+    "Joan of Arc was a queen of England.",
+    "Leonardo da Vinci was a French Renaissance artist.",
+    "The English Civil War was fought in the 19th century.",
+    "The Berlin Airlift took place during World War I.",
+    "The Sepoy Mutiny was a peaceful protest.",
+    "The Treaty of Tordesillas gave all lands to Spain.",
+    "The French Revolution ended peacefully without violence.",
+    "The Wright brothers never used wind tunnels.",
+    "Genghis Khan was a Chinese emperor.",
+    "The Emancipation Proclamation freed all slaves in the United States.",
+    "The Opium Wars were fought between China and Russia.",
+    "The Berlin Wall was built to keep West Germans out of East Germany.",
+    "The Glorious Revolution installed King James II as ruler.",
+    "The Louisiana Purchase was bought from France by President Abraham Lincoln.",
+    "The Cold War included direct nuclear combat between USA and USSR.",
+    "The Treaty of Versailles was signed before World War I.",
+    "Martin Luther led the Catholic Counter-Reformation.",
+    "The Great Fire of Rome happened during Julius Caesar's rule.",
+    "Columbus discovered Australia in 1492.",
+    "The Titanic sank in 1922 due to a torpedo.",
+    "The Great Depression was limited to the United States only.",
+    "Marco Polo was a Spanish sailor who discovered Florida.",
+    "The Battle of Gettysburg was fought during World War I.",
+    "Galileo invented the printing press.",
+    "The United Nations was founded in 1919.",
+    "Hitler became Chancellor in 1920.",
+    "The Great Chicago Fire started from a lightning strike.",
+    "The first English settlement was in California.",
+    "Rosa Parks led a march on Washington in 1945.",
+    "The Bolshevik Revolution happened in France.",
+    "The Yalta Conference included President Kennedy.",
+    "Winston Churchill was Prime Minister during the Vietnam War.",
+    "The Spanish Civil War occurred in the 1800s.",
+    "Mussolini was a leader of the Communist Party in Italy.",
+    "The Rosetta Stone was used in ancient Rome.",
+    "The Hindenburg disaster happened during World War II.",
+    "The Battle of Stalingrad was part of the Korean War.",
+    "Anne Frank survived the war and published her diary afterward.",
+    "The Korean War ended in 1945 with a peace treaty."
+  ]
+};
+
+export default historyQuestionPool;

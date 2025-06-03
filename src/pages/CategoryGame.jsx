@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import scienceQuestions from "../data/scienceQuestions";
-import popCultureQuestions from "../data/popCultureQuestions";
-import historyQuestions from "../data/historyQuestions";
-import geographyQuestions from "../data/geographyQuestions";
-import foodAndCultureQuestions from "../data/foodAndCultureQuestions";
-import animalQuestions from "../data/animalQuestions";
+import { categories } from "../data/categories";
 import bannerImage from "../assets/banner.jpg";
 
 export default function CategoryGame() {
-  const { categoryId } = useParams();
+  const { mainCategorySlug, subcategorySlug } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const timerDuration = location.state?.timer || 15; // Default to medium if no timer provided
+  const timerDuration = location.state?.timer || 15;
+  const mainCategory = location.state?.mainCategory || (mainCategorySlug ? mainCategorySlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : "");
+  const subcategory = location.state?.subcategory || (subcategorySlug ? subcategorySlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : "");
 
   const [questions, setQuestions] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -23,40 +20,53 @@ export default function CategoryGame() {
   const [countdown, setCountdown] = useState(3);
   const [shouldAdvance, setShouldAdvance] = useState(false);
 
-  // Initialize questions based on the category
-  useEffect(() => {
-    let selectedQuestions = [];
-    const category = categoryId.split('-').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ');
+  // Helper to dynamically import the correct question pool
+  async function getQuestionPool(main, sub) {
+    const cat = categories.find(c => c.name.toLowerCase() === main.toLowerCase());
+    if (!cat) return null;
+    const subcat = cat.subcategories.find(s => s.name.toLowerCase() === sub.toLowerCase());
+    if (!subcat) return null;
+    // Dynamic import
+    const poolModule = await import(`../data/${subcat.file}.js`);
+    // The pool is the default export
+    return poolModule.default;
+  }
 
-    switch (category) {
-      case "Science":
-        selectedQuestions = scienceQuestions.questions;
-        break;
-      case "Pop Culture":
-        selectedQuestions = popCultureQuestions.questions;
-        break;
-      case "History":
-        selectedQuestions = historyQuestions.questions;
-        break;
-      case "Geography":
-        selectedQuestions = geographyQuestions.questions;
-        break;
-      case "Food & Culture":
-        selectedQuestions = foodAndCultureQuestions.questions;
-        break;
-      case "Animals":
-        selectedQuestions = animalQuestions.questions;
-        break;
-      default:
+  // Initialize questions based on main/subcategory
+  useEffect(() => {
+    let isMounted = true;
+    async function loadQuestions() {
+      const pool = await getQuestionPool(mainCategory, subcategory);
+      if (!pool) {
         navigate('/');
         return;
+      }
+      // Helper to get N unique random items from an array, excluding used
+      function getUniqueRandom(arr, n, usedSet) {
+        const available = arr.filter(item => !usedSet.has(item));
+        const shuffled = available.sort(() => Math.random() - 0.5);
+        return shuffled.slice(0, n);
+      }
+      // Generate questions: 2 true, 1 bluff, no repeats in game
+      const numQuestions = Math.min(10, Math.floor(Math.min(pool.trueStatements.length / 2, pool.bluffs.length)));
+      const usedTrue = new Set();
+      const usedBluff = new Set();
+      const generatedQuestions = [];
+      for (let i = 0; i < numQuestions; i++) {
+        const trueStmts = getUniqueRandom(pool.trueStatements, 2, usedTrue);
+        trueStmts.forEach(s => usedTrue.add(s));
+        const bluff = getUniqueRandom(pool.bluffs, 1, usedBluff)[0];
+        usedBluff.add(bluff);
+        // Shuffle the 3 statements and track the answer
+        const statements = [...trueStmts, bluff].sort(() => Math.random() - 0.5);
+        const answer = statements.indexOf(bluff);
+        generatedQuestions.push({ statements, answer });
+      }
+      if (isMounted) setQuestions(generatedQuestions);
     }
-
-    const shuffledQuestions = [...selectedQuestions].sort(() => Math.random() - 0.5);
-    setQuestions(shuffledQuestions);
-  }, [categoryId, navigate]);
+    loadQuestions();
+    return () => { isMounted = false; };
+  }, [mainCategory, subcategory, navigate]);
 
   // Countdown logic
   useEffect(() => {
@@ -71,7 +81,6 @@ export default function CategoryGame() {
           return prev - 1;
         });
       }, 1000);
-
       return () => clearInterval(interval);
     }
   }, [gamePhase]);
@@ -89,7 +98,6 @@ export default function CategoryGame() {
           return prev - 1;
         });
       }, 1000);
-
       return () => clearInterval(interval);
     }
   }, [gamePhase, current]);
@@ -108,9 +116,7 @@ export default function CategoryGame() {
     navigate('/game-over', { 
       state: { 
         streak, 
-        category: categoryId.split('-').map(word => 
-          word.charAt(0).toUpperCase() + word.slice(1)
-        ).join(' '),
+        category: `${mainCategory} - ${subcategory}`,
         timer: timerDuration
       } 
     });
@@ -119,10 +125,8 @@ export default function CategoryGame() {
   const handleSelect = (index) => {
     setSelected(index);
     const correctAnswer = questions[current].answer;
-
     if (index === correctAnswer) {
       setStreak((prev) => prev + 1);
-
       if (current + 1 < questions.length) {
         setTimeout(() => {
           setSelected(null);
@@ -134,9 +138,7 @@ export default function CategoryGame() {
           navigate('/game-over', { 
             state: { 
               streak: streak + 1, 
-              category: categoryId.split('-').map(word => 
-                word.charAt(0).toUpperCase() + word.slice(1)
-              ).join(' '),
+              category: `${mainCategory} - ${subcategory}`,
               timer: timerDuration
             } 
           });
@@ -147,9 +149,7 @@ export default function CategoryGame() {
         navigate('/answer', { 
           state: { 
             streak, 
-            category: categoryId.split('-').map(word => 
-              word.charAt(0).toUpperCase() + word.slice(1)
-            ).join(' '),
+            category: `${mainCategory} - ${subcategory}`,
             timer: timerDuration,
             correctAnswer: questions[current].statements[correctAnswer],
             explanation: questions[current].explanation || "That was the bluff!"

@@ -18,7 +18,7 @@ export const defaultTitles = {
 
 // Category-specific titles
 export const categoryTitles = {
-  "Science": {
+  "Science & Technology": {
     0: "Lab Assistant",
     1: "Science Student",
     3: "Research Intern",
@@ -33,6 +33,22 @@ export const categoryTitles = {
     30: "Science Visionary",
     35: "Scientific Revolutionary",
     36: "The Ultimate Scientist"
+  },
+  "Bollywood": {
+    0: "Filmy Fan",
+    1: "Movie Maniac",
+    3: "Bollywood Buff",
+    5: "Film Critic Saab",
+    7: "Cinema Expert Babu",
+    10: "Bollywood Insider Bhai",
+    12: "Film Guru Ji",
+    15: "Cinema Legend Saab",
+    18: "Bollywood Superstar",
+    20: "Film Maestro Saab",
+    25: "Cinema Visionary Babu",
+    30: "Bollywood Icon Saab",
+    35: "Film Dynasty Raja",
+    36: "The Ultimate Bollywood Maharaja"
   },
   "History": {
     0: "History Student",

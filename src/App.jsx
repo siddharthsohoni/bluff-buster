@@ -22,7 +22,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/difficulty" element={<DifficultySelection />} />
             <Route path="/categories" element={<CategorySelection />} />
-            <Route path="/category/:categoryId" element={<CategoryGame />} />
+            <Route path="/category/:mainCategorySlug/:subcategorySlug" element={<CategoryGame />} />
             <Route path="/game-over" element={<GameOver />} />
             <Route path="/answer" element={<Answer />} />
             <Route path="/about" element={<About />} />
